@@ -1,4 +1,11 @@
-import { useState, type KeyboardEvent, type ReactNode } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+} from 'react';
 import { FloaterActionsProvider, useFloaterActions, type FloaterAction } from 'floaty';
 
 // ─── Inline icons (zero deps) ────────────────────────
@@ -613,16 +620,15 @@ function Spotlight({ v }: { v: Variant }) {
 }
 
 // ─── Mosaic — entire tile is the trigger ─────────────
-function Tile({ v }: { v: Variant }) {
+function Tile({ v, onShowCss }: { v: Variant; onShowCss: (v: Variant) => void }) {
   return (
     <FloaterActionsProvider maxVisible={maxVisibleFor(v.shape)} className={v.themeClass}>
-      <TileBody v={v} />
+      <TileBody v={v} onShowCss={onShowCss} />
     </FloaterActionsProvider>
   );
 }
 
-function TileBody({ v }: { v: Variant }) {
-  const [openCss, setOpenCss] = useState(false);
+function TileBody({ v, onShowCss }: { v: Variant; onShowCss: (v: Variant) => void }) {
   const { show } = useFloaterActions();
   const handleSummon = () => show(v.actions ?? liveActions);
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -653,23 +659,107 @@ function TileBody({ v }: { v: Variant }) {
         <button
           type="button"
           className="tile-toggle"
-          aria-pressed={openCss}
-          aria-label={openCss ? `Hide CSS for ${v.name}` : `Show CSS for ${v.name}`}
+          aria-label={`Show CSS for ${v.name}`}
           onClick={(e) => {
             e.stopPropagation();
-            setOpenCss((o) => !o);
+            onShowCss(v);
           }}
         >
           <span aria-hidden="true">{`{ }`}</span>
         </button>
       </div>
       <p className="tile-desc">{v.desc}</p>
-      <div className="tile-css" data-open={openCss}>
-        <div>
-          <pre>{highlightCss(v.cssCode)}</pre>
-        </div>
-      </div>
     </div>
+  );
+}
+
+// ─── Modal CSS viewer ────────────────────────────────
+function CssDialog({
+  variant,
+  onClose,
+}: {
+  variant: Variant | null;
+  onClose: () => void;
+}) {
+  const ref = useRef<HTMLDialogElement>(null);
+  const [copied, setCopied] = useState<'idle' | 'copied' | 'failed'>('idle');
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (variant && !el.open) el.showModal();
+    if (!variant && el.open) el.close();
+  }, [variant]);
+
+  // Reset copy state whenever a new variant is opened
+  useEffect(() => {
+    setCopied('idle');
+  }, [variant?.id]);
+
+  const handleCopy = () => {
+    if (!variant) return;
+    navigator.clipboard.writeText(variant.cssCode).then(
+      () => {
+        setCopied('copied');
+        setTimeout(() => setCopied('idle'), 1600);
+      },
+      () => {
+        setCopied('failed');
+        setTimeout(() => setCopied('idle'), 1600);
+      },
+    );
+  };
+
+  // Native <dialog> emits 'close' on ESC / form-method=dialog — sync state up.
+  const onDialogClose = () => onClose();
+  // Click on backdrop (target === dialog itself) closes.
+  const onBackdropClick = (e: MouseEvent<HTMLDialogElement>) => {
+    if (e.target === ref.current) onClose();
+  };
+
+  return (
+    <dialog
+      ref={ref}
+      className="css-dialog"
+      onClose={onDialogClose}
+      onClick={onBackdropClick}
+      aria-label={variant ? `${variant.name} CSS` : undefined}
+    >
+      {variant && (
+        <div className="css-dialog-frame">
+          <header className="css-dialog-head">
+            <div className="css-dialog-title">
+              <span className="css-dialog-no">{variant.no}</span>
+              <h3>{variant.name}</h3>
+            </div>
+            <div className="css-dialog-actions">
+              <button
+                type="button"
+                className="css-dialog-copy"
+                onClick={handleCopy}
+                data-state={copied}
+                aria-live="polite"
+              >
+                {copied === 'copied'
+                  ? 'Copied'
+                  : copied === 'failed'
+                  ? 'Failed'
+                  : 'Copy'}
+              </button>
+              <button
+                type="button"
+                className="css-dialog-close"
+                onClick={onClose}
+                aria-label="Close"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+          </header>
+          <pre className="css-dialog-pre">{highlightCss(variant.cssCode)}</pre>
+        </div>
+      )}
+    </dialog>
   );
 }
 
@@ -696,6 +786,7 @@ function highlightCss(code: string): ReactNode[] {
 export function Customization() {
   const featured = variants.filter((v) => v.featured);
   const mosaic = variants.filter((v) => !v.featured);
+  const [cssVariant, setCssVariant] = useState<Variant | null>(null);
 
   return (
     <section id="customize">
@@ -726,9 +817,10 @@ export function Customization() {
         </header>
         <div className="tile-grid">
           {mosaic.map((v) => (
-            <Tile key={v.id} v={v} />
+            <Tile key={v.id} v={v} onShowCss={setCssVariant} />
           ))}
         </div>
+        <CssDialog variant={cssVariant} onClose={() => setCssVariant(null)} />
 
         <p className="customize-foot">
           Every variant is a className applied to the Provider. The bar reads CSS custom
