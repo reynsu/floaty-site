@@ -1,21 +1,23 @@
-import { Cover } from './sections/Cover';
-import { Manifesto } from './sections/Manifesto';
-import { Specimen } from './sections/Specimen';
-import { InUse } from './sections/InUse';
-import { Specifications } from './sections/Specifications';
-import { FieldGuide } from './sections/FieldGuide';
-import { Colophon } from './sections/Colophon';
+import { Topbar } from './components/Topbar';
+import { Hero } from './sections/Hero';
+import { Examples } from './sections/Examples';
+import { Customization } from './sections/Customization';
+import { API } from './sections/API';
+import { Install } from './sections/Install';
+import { Footer } from './sections/Footer';
 
 export function App() {
   return (
-    <main>
-      <Cover />
-      <Manifesto />
-      <Specimen />
-      <InUse />
-      <Specifications />
-      <FieldGuide />
-      <Colophon />
-    </main>
+    <>
+      <Topbar />
+      <main>
+        <Hero />
+        <Examples />
+        <Customization />
+        <API />
+        <Install />
+        <Footer />
+      </main>
+    </>
   );
 }

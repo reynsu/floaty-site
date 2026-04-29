@@ -1,0 +1,305 @@
+/* ──────────────────────────────────────────────────────────────
+   FLOATY — 12 customization variants.
+   Each maps to:
+     1. A class on the actual `.fa-bar` (real floating bar)
+     2. CSS custom properties on `.fa-mini` for the preview chip
+   ──────────────────────────────────────────────────────────── */
+
+/* ── 01 / DEFAULT ─────────────────────────────────────────── */
+.theme-default.fa-bar {
+  --fa-bg: oklch(98.8% 0.003 80);
+  --fa-fg: oklch(15% 0.018 270);
+  --fa-border: oklch(91% 0.005 270);
+  --fa-radius: 12px;
+  --fa-radius-inner: 8px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(94% 0.005 270);
+  --fa-action-bg-active: oklch(90% 0.006 270);
+  --fa-shadow: 0 1px 2px oklch(15% 0.018 270 / 0.06), 0 12px 32px oklch(15% 0.018 270 / 0.12);
+  --fa-danger: oklch(58% 0.20 28);
+}
+.fa-mini.theme-default {
+  --mini-bg: oklch(98.8% 0.003 80);
+  --mini-fg: oklch(15% 0.018 270);
+  --mini-border: 1px solid oklch(91% 0.005 270);
+  --mini-radius: 10px;
+  --mini-radius-inner: 6px;
+  --mini-shadow: 0 6px 16px oklch(15% 0.018 270 / 0.08);
+}
+
+/* ── 02 / MIDNIGHT ────────────────────────────────────────── */
+.theme-midnight.fa-bar {
+  --fa-bg: oklch(18% 0.02 270);
+  --fa-fg: oklch(96% 0.005 80);
+  --fa-border: oklch(28% 0.02 270);
+  --fa-radius: 12px;
+  --fa-radius-inner: 8px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(25% 0.02 270);
+  --fa-action-bg-active: oklch(32% 0.02 270);
+  --fa-shadow: 0 12px 40px oklch(15% 0.018 270 / 0.4);
+  --fa-danger: oklch(72% 0.18 28);
+}
+.fa-mini.theme-midnight {
+  --mini-bg: oklch(18% 0.02 270);
+  --mini-fg: oklch(96% 0.005 80);
+  --mini-border: 1px solid oklch(28% 0.02 270);
+  --mini-radius: 10px;
+  --mini-radius-inner: 6px;
+  --mini-shadow: 0 8px 20px oklch(15% 0.018 270 / 0.4);
+}
+
+/* ── 03 / GLASS ───────────────────────────────────────────── */
+.theme-glass.fa-bar {
+  --fa-bg: oklch(98.8% 0.003 80 / 0.65);
+  --fa-fg: oklch(15% 0.018 270);
+  --fa-border: oklch(15% 0.018 270 / 0.08);
+  --fa-radius: 18px;
+  --fa-radius-inner: 12px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(15% 0.018 270 / 0.06);
+  --fa-action-bg-active: oklch(15% 0.018 270 / 0.12);
+  --fa-shadow: 0 16px 40px oklch(15% 0.018 270 / 0.18);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+.fa-mini.theme-glass {
+  --mini-bg: oklch(98.8% 0.003 80 / 0.65);
+  --mini-fg: oklch(15% 0.018 270);
+  --mini-border: 1px solid oklch(15% 0.018 270 / 0.08);
+  --mini-radius: 14px;
+  --mini-radius-inner: 8px;
+  --mini-shadow: 0 8px 20px oklch(15% 0.018 270 / 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ── 04 / PILL ────────────────────────────────────────────── */
+.theme-pill.fa-bar {
+  --fa-bg: oklch(15% 0.018 270);
+  --fa-fg: oklch(96% 0.005 80);
+  --fa-border: transparent;
+  --fa-radius: 999px;
+  --fa-radius-inner: 999px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(28% 0.02 270);
+  --fa-action-bg-active: oklch(35% 0.02 270);
+  --fa-shadow: 0 12px 32px oklch(15% 0.018 270 / 0.35);
+  --fa-danger: oklch(72% 0.18 28);
+  padding: 6px;
+}
+.fa-mini.theme-pill {
+  --mini-bg: oklch(15% 0.018 270);
+  --mini-fg: oklch(96% 0.005 80);
+  --mini-border: 0;
+  --mini-radius: 999px;
+  --mini-radius-inner: 999px;
+  --mini-shadow: 0 8px 20px oklch(15% 0.018 270 / 0.35);
+  padding: 4px;
+}
+
+/* ── 05 / BRUTALIST ───────────────────────────────────────── */
+.theme-brutalist.fa-bar {
+  --fa-bg: oklch(98.8% 0.003 80);
+  --fa-fg: oklch(13% 0 0);
+  --fa-border: oklch(13% 0 0);
+  --fa-radius: 0;
+  --fa-radius-inner: 0;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(13% 0 0);
+  --fa-action-bg-active: oklch(13% 0 0);
+  --fa-shadow: 5px 5px 0 oklch(13% 0 0);
+  --fa-danger: oklch(55% 0.22 28);
+  border: 2px solid oklch(13% 0 0);
+  font-family: 'JetBrains Mono', monospace;
+}
+.theme-brutalist.fa-bar .fa-action:hover,
+.theme-brutalist.fa-bar .fa-more:hover {
+  color: oklch(98.8% 0.003 80);
+}
+.fa-mini.theme-brutalist {
+  --mini-bg: oklch(98.8% 0.003 80);
+  --mini-fg: oklch(13% 0 0);
+  --mini-border: 2px solid oklch(13% 0 0);
+  --mini-radius: 0;
+  --mini-radius-inner: 0;
+  --mini-shadow: 4px 4px 0 oklch(13% 0 0);
+  --mini-font: 'JetBrains Mono', monospace;
+}
+
+/* ── 06 / TERMINAL ────────────────────────────────────────── */
+.theme-terminal.fa-bar {
+  --fa-bg: oklch(13% 0.04 140);
+  --fa-fg: oklch(85% 0.18 140);
+  --fa-border: oklch(45% 0.10 140);
+  --fa-radius: 4px;
+  --fa-radius-inner: 2px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(22% 0.06 140);
+  --fa-action-bg-active: oklch(30% 0.08 140);
+  --fa-shadow: 0 0 0 1px oklch(85% 0.18 140 / 0.2), 0 12px 32px oklch(13% 0.04 140 / 0.6);
+  --fa-danger: oklch(78% 0.18 28);
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  border: 1px solid oklch(45% 0.10 140);
+}
+.fa-mini.theme-terminal {
+  --mini-bg: oklch(13% 0.04 140);
+  --mini-fg: oklch(85% 0.18 140);
+  --mini-border: 1px solid oklch(45% 0.10 140);
+  --mini-radius: 4px;
+  --mini-radius-inner: 2px;
+  --mini-shadow: 0 0 0 1px oklch(85% 0.18 140 / 0.15);
+  --mini-font: 'JetBrains Mono', monospace;
+}
+
+/* ── 07 / MAC ─────────────────────────────────────────────── */
+.theme-mac.fa-bar {
+  --fa-bg: oklch(96% 0.005 270 / 0.85);
+  --fa-fg: oklch(15% 0.018 270);
+  --fa-border: oklch(15% 0.018 270 / 0.06);
+  --fa-radius: 11px;
+  --fa-radius-inner: 7px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(15% 0.018 270 / 0.06);
+  --fa-action-bg-active: oklch(15% 0.018 270 / 0.12);
+  --fa-shadow: inset 0 0.5px 0 oklch(100% 0 0 / 0.6), 0 14px 40px oklch(15% 0.018 270 / 0.18);
+  --fa-danger: oklch(55% 0.22 28);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+.fa-mini.theme-mac {
+  --mini-bg: oklch(96% 0.005 270 / 0.85);
+  --mini-fg: oklch(15% 0.018 270);
+  --mini-border: 1px solid oklch(15% 0.018 270 / 0.06);
+  --mini-radius: 9px;
+  --mini-radius-inner: 6px;
+  --mini-shadow: inset 0 0.5px 0 oklch(100% 0 0 / 0.6), 0 8px 20px oklch(15% 0.018 270 / 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ── 08 / STRIPE ──────────────────────────────────────────── */
+.theme-stripe.fa-bar {
+  --fa-bg: linear-gradient(180deg, oklch(99% 0.003 240), oklch(96% 0.015 240));
+  --fa-fg: oklch(20% 0.05 240);
+  --fa-border: oklch(85% 0.04 240);
+  --fa-radius: 10px;
+  --fa-radius-inner: 7px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(95% 0.025 240);
+  --fa-action-bg-active: oklch(92% 0.04 240);
+  --fa-shadow: 0 1px 2px oklch(50% 0.10 240 / 0.06), 0 8px 24px oklch(50% 0.10 240 / 0.12);
+  --fa-danger: oklch(58% 0.22 28);
+  background: linear-gradient(180deg, oklch(99% 0.003 240), oklch(96% 0.015 240));
+}
+.fa-mini.theme-stripe {
+  --mini-bg: linear-gradient(180deg, oklch(99% 0.003 240), oklch(96% 0.015 240));
+  --mini-fg: oklch(20% 0.05 240);
+  --mini-border: 1px solid oklch(85% 0.04 240);
+  --mini-radius: 9px;
+  --mini-radius-inner: 6px;
+  --mini-shadow: 0 6px 16px oklch(50% 0.10 240 / 0.12);
+  background: linear-gradient(180deg, oklch(99% 0.003 240), oklch(96% 0.015 240));
+}
+
+/* ── 09 / NOTION ──────────────────────────────────────────── */
+.theme-notion.fa-bar {
+  --fa-bg: oklch(98% 0.005 80);
+  --fa-fg: oklch(15% 0.018 270);
+  --fa-border: oklch(15% 0.018 270 / 0.08);
+  --fa-radius: 6px;
+  --fa-radius-inner: 4px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(15% 0.018 270 / 0.06);
+  --fa-action-bg-active: oklch(15% 0.018 270 / 0.10);
+  --fa-shadow: 0 0 0 1px oklch(15% 0.018 270 / 0.04), 0 4px 12px oklch(15% 0.018 270 / 0.08), 0 12px 32px oklch(15% 0.018 270 / 0.06);
+  --fa-danger: oklch(55% 0.22 28);
+}
+.fa-mini.theme-notion {
+  --mini-bg: oklch(98% 0.005 80);
+  --mini-fg: oklch(15% 0.018 270);
+  --mini-border: 1px solid oklch(15% 0.018 270 / 0.08);
+  --mini-radius: 5px;
+  --mini-radius-inner: 3px;
+  --mini-shadow: 0 0 0 1px oklch(15% 0.018 270 / 0.04), 0 4px 12px oklch(15% 0.018 270 / 0.08);
+}
+
+/* ── 10 / DISCORD ─────────────────────────────────────────── */
+.theme-discord.fa-bar {
+  --fa-bg: oklch(38% 0.10 270);
+  --fa-fg: oklch(96% 0.005 80);
+  --fa-border: oklch(48% 0.12 270);
+  --fa-radius: 14px;
+  --fa-radius-inner: 9px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(45% 0.12 270);
+  --fa-action-bg-active: oklch(52% 0.14 270);
+  --fa-shadow: 0 12px 32px oklch(38% 0.10 270 / 0.4);
+  --fa-danger: oklch(72% 0.18 28);
+  font-weight: 600;
+}
+.fa-mini.theme-discord {
+  --mini-bg: oklch(38% 0.10 270);
+  --mini-fg: oklch(96% 0.005 80);
+  --mini-border: 1px solid oklch(48% 0.12 270);
+  --mini-radius: 12px;
+  --mini-radius-inner: 7px;
+  --mini-shadow: 0 8px 20px oklch(38% 0.10 270 / 0.4);
+}
+.fa-mini.theme-discord button { font-weight: 600; }
+
+/* ── 11 / PASTEL ──────────────────────────────────────────── */
+.theme-pastel.fa-bar {
+  --fa-bg: oklch(94% 0.04 25);
+  --fa-fg: oklch(28% 0.10 25);
+  --fa-border: oklch(82% 0.08 25);
+  --fa-radius: 18px;
+  --fa-radius-inner: 12px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(89% 0.06 25);
+  --fa-action-bg-active: oklch(85% 0.08 25);
+  --fa-shadow: 0 12px 32px oklch(75% 0.10 25 / 0.5);
+  --fa-danger: oklch(48% 0.20 28);
+}
+.fa-mini.theme-pastel {
+  --mini-bg: oklch(94% 0.04 25);
+  --mini-fg: oklch(28% 0.10 25);
+  --mini-border: 1px solid oklch(82% 0.08 25);
+  --mini-radius: 14px;
+  --mini-radius-inner: 10px;
+  --mini-shadow: 0 8px 20px oklch(75% 0.10 25 / 0.4);
+}
+
+/* ── 12 / ACID ────────────────────────────────────────────── */
+.theme-acid.fa-bar {
+  --fa-bg: oklch(78% 0.20 110);
+  --fa-fg: oklch(15% 0.04 110);
+  --fa-border: oklch(60% 0.18 110);
+  --fa-radius: 8px;
+  --fa-radius-inner: 4px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(72% 0.20 110);
+  --fa-action-bg-active: oklch(66% 0.20 110);
+  --fa-shadow: 0 12px 32px oklch(78% 0.20 110 / 0.5), 0 0 0 1px oklch(60% 0.18 110);
+  --fa-danger: oklch(28% 0.20 28);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.fa-mini.theme-acid {
+  --mini-bg: oklch(78% 0.20 110);
+  --mini-fg: oklch(15% 0.04 110);
+  --mini-border: 1px solid oklch(60% 0.18 110);
+  --mini-radius: 6px;
+  --mini-radius-inner: 3px;
+  --mini-shadow: 0 8px 20px oklch(78% 0.20 110 / 0.4);
+}
+.fa-mini.theme-acid button {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 9px;
+}

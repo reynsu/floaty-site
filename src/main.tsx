@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { App } from './App';
 import 'floaty/styles.css';
 import './styles/global.css';
+import './styles/themes.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
