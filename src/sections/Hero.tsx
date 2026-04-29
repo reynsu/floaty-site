@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FloaterActionsProvider, useFloaterActions } from 'floaty';
 import { Code } from '../components/Code';
 
@@ -18,25 +18,37 @@ function Page() {
   );
 }`;
 
-function HeroTrigger() {
-  const { show } = useFloaterActions();
+const demoActions = [
+  { id: 'copy', label: 'Copy', onSelect: () => {} },
+  { id: 'share', label: 'Share', onSelect: () => {} },
+  { id: 'archive', label: 'Archive', onSelect: () => {} },
+  { id: 'pin', label: 'Pin', onSelect: () => {} },
+  { id: 'delete', label: 'Delete', variant: 'danger' as const, onSelect: () => {} },
+];
+
+function HeroDemoStage() {
+  const { show, open } = useFloaterActions();
+
+  useEffect(() => {
+    const t = window.setTimeout(() => show(demoActions), 1200);
+    return () => window.clearTimeout(t);
+  }, [show]);
+
   return (
-    <button
-      type="button"
-      className="demo-trigger"
-      onClick={() =>
-        show([
-          { id: 'copy', label: 'Copy', onSelect: () => {} },
-          { id: 'share', label: 'Share', onSelect: () => {} },
-          { id: 'archive', label: 'Archive', onSelect: () => {} },
-          { id: 'pin', label: 'Pin', onSelect: () => {} },
-          { id: 'delete', label: 'Delete', variant: 'danger', onSelect: () => {} },
-        ])
-      }
-    >
-      <span>Tap to summon the bar</span>
-      <span aria-hidden style={{ opacity: 0.6 }}>↗</span>
-    </button>
+    <div className="hero-demo-stage">
+      <div className="hero-demo-target" data-open={open}>
+        <div className="hero-demo-target-label">↓ floaty</div>
+        <div className="hero-demo-target-line" />
+      </div>
+      <button
+        type="button"
+        className="demo-trigger"
+        onClick={() => show(demoActions)}
+      >
+        <span>{open ? 'Click again to re-summon' : 'Tap to summon the bar'}</span>
+        <span aria-hidden style={{ opacity: 0.6 }}>↗</span>
+      </button>
+    </div>
   );
 }
 
@@ -64,48 +76,22 @@ export function Hero() {
   return (
     <section className="hero" id="top">
       <div className="page">
-        <span className="kicker">v0.1.0 — public beta</span>
+        <span className="kicker">v0.1.0 · public beta</span>
 
-        <div className="hero-grid" style={{ marginTop: 20 }}>
-          <div>
-            <h1>
-              Floating actions<span className="slash">.</span>
-              <br />
-              For React<span className="slash">.</span>
-            </h1>
-            <p className="hero-sub">
-              A microscopic toolbar that lifts on demand and dismisses on outside-click.
-              Mobile-first, fully themable, ~8 KB ESM, zero runtime deps.
-            </p>
+        <h1 style={{ marginTop: 20 }}>
+          Floating actions<span className="slash">.</span>
+          <br />
+          For React<span className="slash">.</span>
+        </h1>
 
-            <div className="hero-meta">
-              <span><b>~8 KB</b> ESM gzipped</span>
-              <span><b>0</b> runtime deps</span>
-              <span><b>React</b> 18+</span>
-              <span><b>SSR</b> safe</span>
-            </div>
+        <p className="hero-prose">
+          A <b>React 18</b> component for the toolbar that slides up when something is
+          selected. Around <b>8 KB ESM</b> gzipped, with <b>zero runtime dependencies</b>,{' '}
+          <b>SSR-safe</b> rendering, and the <b>WAI-ARIA toolbar</b> pattern wired in.
+        </p>
 
-            <div className="hero-cta">
-              <CopyableInstall />
-              <a
-                href="https://github.com/reynsu/floaty"
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-ghost"
-              >
-                View on GitHub
-                <span aria-hidden style={{ opacity: 0.6 }}>↗</span>
-              </a>
-            </div>
-
-            <div className="specs-strip">
-              <span className="spec-item"><span className="dot" /> <b>useSyncExternalStore</b></span>
-              <span className="spec-item"><span className="dot" /> <b>portal</b> to body</span>
-              <span className="spec-item"><span className="dot" /> <b>aria-toolbar</b></span>
-              <span className="spec-item"><span className="dot" /> <b>esc</b> + <b>outside-click</b></span>
-              <span className="spec-item"><span className="dot" /> CSS-only animations</span>
-            </div>
-          </div>
+        <div className="hero-cta">
+          <CopyableInstall />
         </div>
 
         <div className="hero-demo">
@@ -117,7 +103,7 @@ export function Hero() {
                 aria-selected={tab === 'demo'}
                 onClick={() => setTab('demo')}
               >
-                Demo <span className="num">↑</span>
+                Live <span className="num">↑</span>
               </button>
               <button
                 type="button"
@@ -125,16 +111,14 @@ export function Hero() {
                 aria-selected={tab === 'code'}
                 onClick={() => setTab('code')}
               >
-                Code <span className="num">{`{ }`}</span>
+                Source
               </button>
             </div>
           </div>
           {tab === 'demo' ? (
-            <div className="hero-demo-stage">
-              <FloaterActionsProvider maxVisible={3}>
-                <HeroTrigger />
-              </FloaterActionsProvider>
-            </div>
+            <FloaterActionsProvider maxVisible={3}>
+              <HeroDemoStage />
+            </FloaterActionsProvider>
           ) : (
             <Code code={heroSnippet} />
           )}
