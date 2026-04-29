@@ -30,13 +30,20 @@ function HeroDemoStage() {
   const { show, open } = useFloaterActions();
 
   useEffect(() => {
+    // Skip the auto-summon for users who asked the OS for less motion.
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return;
+    }
     const t = window.setTimeout(() => show(demoActions), 1200);
     return () => window.clearTimeout(t);
   }, [show]);
 
   return (
     <div className="hero-demo-stage">
-      <div className="hero-demo-target" data-open={open}>
+      <div className="hero-demo-target" data-open={open} aria-hidden="true">
         <div className="hero-demo-target-label">↓ floaty</div>
         <div className="hero-demo-target-line" />
       </div>
@@ -46,7 +53,7 @@ function HeroDemoStage() {
         onClick={() => show(demoActions)}
       >
         <span>{open ? 'Click again to re-summon' : 'Tap to summon the bar'}</span>
-        <span aria-hidden style={{ opacity: 0.6 }}>↗</span>
+        <span aria-hidden="true" className="demo-trigger-arrow">↗</span>
       </button>
     </div>
   );

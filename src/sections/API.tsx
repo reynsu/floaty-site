@@ -21,17 +21,17 @@ export function API() {
         <div className="section-h">
           <div>
             <span className="kicker">API</span>
-            <h2 style={{ marginTop: 10 }}>One Provider, one hook.</h2>
+            <h2>One Provider, one hook.</h2>
           </div>
           <span className="section-h-meta">5 props · 5 members · ~8 KB</span>
         </div>
 
         <div className="api-grid">
           <div>
-            <div className="api-block-h">
-              <span>&lt;FloaterActionsProvider /&gt;</span>
+            <h3 className="api-block-h">
+              <span>{'<FloaterActionsProvider />'}</span>
               <span className="meta">component</span>
-            </div>
+            </h3>
             <div className="api-table">
               {provider.map((p) => (
                 <div className="row" key={p.k}>
@@ -51,10 +51,10 @@ export function API() {
           </div>
 
           <div>
-            <div className="api-block-h">
+            <h3 className="api-block-h">
               <span>useFloaterActions()</span>
               <span className="meta">hook</span>
-            </div>
+            </h3>
             <div className="api-table">
               {hook.map((h) => (
                 <div className="row" key={h.k}>

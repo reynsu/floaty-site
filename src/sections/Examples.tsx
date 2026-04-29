@@ -47,7 +47,7 @@ function ExampleCard({ no, name, desc, demo, code, hint }: ExampleCardProps) {
         {tab === 'demo' ? (
           <div className="example-stage">
             {demo}
-            {hint && <div className="demo-hint" style={{ marginTop: 24, textAlign: 'center' }}>{hint}</div>}
+            {hint && <div className="demo-hint demo-hint-bottom">{hint}</div>}
           </div>
         ) : (
           <Code code={code} />
@@ -63,7 +63,7 @@ function ExampleCard({ no, name, desc, demo, code, hint }: ExampleCardProps) {
 function BasicDemo() {
   const { show } = useFloaterActions();
   return (
-    <div style={{ display: 'grid', placeItems: 'center', minHeight: 200 }}>
+    <div className="demo-center demo-center-tall">
       <button
         type="button"
         className="demo-trigger"
@@ -139,7 +139,7 @@ function GalleryDemo() {
   };
 
   return (
-    <div style={{ display: 'grid', placeItems: 'center' }}>
+    <div className="demo-center">
       <div className="demo-gallery">
         {photos.map((p) => (
           <button
@@ -218,7 +218,7 @@ function PaletteDemo() {
     typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform);
 
   return (
-    <div style={{ display: 'grid', placeItems: 'center' }}>
+    <div className="demo-center">
       <div className="demo-editor">
         <div className="ln"><span className="num">1</span><span><span className="kw">function</span> <span className="fn">greet</span>(name) {`{`}</span></div>
         <div className="ln"><span className="num">2</span><span>{'  '}<span className="kw">return</span> <span className="str">{'`Hello, ${name}`'}</span>;</span></div>
@@ -227,13 +227,9 @@ function PaletteDemo() {
         <div className="ln"><span className="num">5</span><span><span className="kw">const</span> msg = <span className="fn">greet</span>(<span className="str">'world'</span>);</span></div>
         <div className="ln"><span className="num">6</span><span><span className="com">// → "Hello, world"</span></span></div>
       </div>
-      <div className="demo-hint" style={{ marginTop: 16 }}>
+      <div className="demo-hint demo-hint-palette">
         Press <span className="kbd">{isMac ? '⌘' : 'Ctrl'}</span> <span className="kbd">K</span> to summon · or{' '}
-        <button
-          type="button"
-          onClick={() => toggle(actions)}
-          style={{ color: 'var(--acc-2)', textDecoration: 'underline', textUnderlineOffset: 3 }}
-        >
+        <button type="button" className="editor-link" onClick={() => toggle(actions)}>
           click here
         </button>
       </div>
@@ -326,12 +322,10 @@ function InboxDemo() {
   };
 
   return (
-    <div style={{ display: 'grid', placeItems: 'center' }}>
+    <div className="demo-center">
       <div className="demo-inbox">
         {emails.length === 0 ? (
-          <div style={{ padding: '32px 16px', textAlign: 'center', color: 'var(--fg-3)', fontFamily: 'var(--mono)', fontSize: 12 }}>
-            inbox zero
-          </div>
+          <div className="demo-empty">inbox zero</div>
         ) : (
           emails.map((e) => (
             <div
@@ -387,7 +381,7 @@ export function Examples() {
         <div className="section-h">
           <div>
             <span className="kicker">Examples</span>
-            <h2 style={{ marginTop: 10 }}>Four real use cases.</h2>
+            <h2>Four real use cases.</h2>
           </div>
           <span className="section-h-meta">All examples run live on this page.</span>
         </div>

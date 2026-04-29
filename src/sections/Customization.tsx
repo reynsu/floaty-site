@@ -305,24 +305,26 @@ const liveActions = [
 
 function MiniBar({ themeClass }: { themeClass: string }) {
   return (
-    <div className={`fa-mini ${themeClass}`} role="presentation">
+    <div className={`fa-mini ${themeClass}`} aria-hidden="true">
       {previewActions.map((a) => (
-        <button key={a.id} type="button" tabIndex={-1}>
+        <span key={a.id} className="fa-mini-action">
           {a.label}
-        </button>
+        </span>
       ))}
-      <button type="button" tabIndex={-1} className="more">
-        +
-      </button>
+      <span className="fa-mini-action more">+</span>
     </div>
   );
 }
 
-function Summon({ children = 'Summon ↑' }: { children?: ReactNode }) {
+function Summon({ children }: { children?: ReactNode }) {
   const { show } = useFloaterActions();
   return (
     <button type="button" className="variant-summon" onClick={() => show(liveActions)}>
-      {children}
+      {children ?? (
+        <>
+          Summon <span aria-hidden="true">↑</span>
+        </>
+      )}
     </button>
   );
 }
@@ -347,7 +349,9 @@ function Spotlight({ v }: { v: Variant }) {
         </ul>
         <div className="spotlight-actions">
           <FloaterActionsProvider maxVisible={3} className={v.themeClass}>
-            <Summon>Summon at the bottom of the page ↗</Summon>
+            <Summon>
+              Summon at the bottom of the page <span aria-hidden="true">↗</span>
+            </Summon>
           </FloaterActionsProvider>
         </div>
         <pre className="spotlight-css">{highlightCss(v.cssCode)}</pre>
@@ -367,7 +371,7 @@ function Tile({ v }: { v: Variant }) {
       <div className="tile-meta">
         <div>
           <span className="tile-no">{v.no}</span>
-          <h4 className="tile-name">{v.name}</h4>
+          <h3 className="tile-name">{v.name}</h3>
         </div>
         <div className="tile-actions">
           <FloaterActionsProvider maxVisible={3} className={v.themeClass}>
@@ -377,10 +381,10 @@ function Tile({ v }: { v: Variant }) {
             type="button"
             className="tile-toggle"
             aria-pressed={openCss}
-            aria-label="Toggle CSS"
+            aria-label={openCss ? `Hide CSS for ${v.name}` : `Show CSS for ${v.name}`}
             onClick={() => setOpenCss((o) => !o)}
           >
-            {`{ }`}
+            <span aria-hidden="true">{`{ }`}</span>
           </button>
         </div>
       </div>
@@ -398,7 +402,7 @@ function SummonInline() {
   const { show } = useFloaterActions();
   return (
     <button type="button" className="tile-summon" onClick={() => show(liveActions)}>
-      Summon ↑
+      Summon <span aria-hidden="true">↑</span>
     </button>
   );
 }
@@ -433,7 +437,7 @@ export function Customization() {
         <div className="section-h">
           <div>
             <span className="kicker">Customization</span>
-            <h2 style={{ marginTop: 10 }}>12 themes from one className.</h2>
+            <h2>12 themes from one className.</h2>
           </div>
           <span className="section-h-meta">
             Three featured variants below. Nine more in the gallery.
@@ -441,30 +445,19 @@ export function Customization() {
         </div>
       </div>
 
-      <div className="page" style={{ display: 'grid', gap: 0 }}>
+      <div className="page customize-spotlights">
         {featured.map((v) => (
           <Spotlight key={v.id} v={v} />
         ))}
       </div>
 
-      <div className="page" style={{ marginTop: 56 }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'baseline',
-            justifyContent: 'space-between',
-            paddingBottom: 16,
-            borderBottom: '1px solid var(--line)',
-            marginBottom: 24,
-          }}
-        >
-          <h3 style={{ fontSize: 18, fontWeight: 600, letterSpacing: '-0.015em' }}>
-            More variants
-          </h3>
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--fg-3)' }}>
-            click <span style={{ background: 'var(--bg-2)', padding: '1px 5px', borderRadius: 3 }}>{`{ }`}</span> to inspect
+      <div className="page customize-mosaic">
+        <header className="mosaic-h">
+          <h3 className="mosaic-h-title">More variants</h3>
+          <span className="mosaic-h-meta">
+            click <span className="mosaic-h-key" aria-hidden="true">{`{ }`}</span> to inspect
           </span>
-        </div>
+        </header>
         <div className="tile-grid">
           {mosaic.map((v) => (
             <Tile key={v.id} v={v} />

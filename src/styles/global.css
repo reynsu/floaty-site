@@ -11,19 +11,19 @@
   --bg-2:      oklch(96% 0.005 80);
   --bg-3:      oklch(93% 0.006 80);
 
-  /* Ink */
+  /* Ink — fg-3 darkened from 56% → 46% to pass WCAG AA (4.5:1 on cream). */
   --fg:        oklch(15% 0.018 270);
-  --fg-2:      oklch(36% 0.015 270);
-  --fg-3:      oklch(56% 0.012 270);
+  --fg-2:      oklch(34% 0.015 270);
+  --fg-3:      oklch(46% 0.014 270);
 
   /* Lines */
   --line:      oklch(91% 0.005 270);
   --line-2:    oklch(86% 0.006 270);
   --line-3:    oklch(80% 0.007 270);
 
-  /* Accent */
+  /* Accent — acc-2 darkened from 58% → 50% for AA on small caps text. */
   --acc:       oklch(66% 0.21 45);
-  --acc-2:     oklch(58% 0.21 45);
+  --acc-2:     oklch(50% 0.21 45);
   --acc-soft:  oklch(94% 0.05 45);
   --acc-fg:    oklch(15% 0.04 45);
 
@@ -117,6 +117,7 @@ section + section { border-top: 1px solid var(--line); }
   font-weight: 600;
   letter-spacing: -0.022em;
   line-height: 1.1;
+  margin-top: 10px;
 }
 .section-h .section-h-meta {
   font-family: var(--sans);
@@ -374,6 +375,19 @@ section + section { border-top: 1px solid var(--line); }
   padding: clamp(28px, 4vw, 56px) clamp(20px, 3vw, 32px);
   min-height: 260px;
 }
+.demo-center {
+  display: grid;
+  place-items: center;
+}
+.demo-empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--fg-3);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.demo-center-tall { min-height: 200px; }
+.demo-hint-bottom { margin-top: 24px; text-align: center; }
 
 /* ─── Code block ──────────────────────────────────────────── */
 .code {
@@ -428,12 +442,25 @@ section + section { border-top: 1px solid var(--line); }
 }
 .demo-trigger:hover { background: oklch(25% 0.018 270); }
 .demo-trigger:active { transform: scale(0.98); }
+.demo-trigger-arrow { opacity: 0.6; }
 
 .demo-hint {
   font-family: var(--sans);
   font-size: 12px;
   color: var(--fg-3);
   font-style: italic;
+}
+.demo-hint-palette { margin-top: 16px; }
+.editor-link {
+  color: var(--acc-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
 }
 
 /* Gallery (selection demo) */
@@ -699,15 +726,17 @@ section + section { border-top: 1px solid var(--line); }
 }
 .tile-no {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 12px;
   color: var(--fg-3);
   letter-spacing: 0.04em;
   margin-bottom: 2px;
 }
+h3.tile-name,
 .tile-name {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: -0.01em;
+  margin: 0;
 }
 .tile-actions {
   display: flex;
@@ -769,15 +798,55 @@ section + section { border-top: 1px solid var(--line); }
 .tile-css .cssval { color: oklch(82% 0.13 110); }
 .tile-css .csscom { color: oklch(50% 0.02 270); font-style: italic; }
 
+/* ── Customize spotlights wrapper ─────────────────────── */
+.customize-spotlights {
+  display: grid;
+  gap: 0;
+}
+.customize-mosaic { margin-top: 56px; }
+
+/* ── Mosaic header ─────────────────────────────────────── */
+.mosaic-h {
+  max-width: var(--content-w);
+  margin: 0 auto 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.mosaic-h-title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+.mosaic-h-meta {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--fg-3);
+}
+.mosaic-h-key {
+  background: var(--bg-2);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
 .customize-foot {
-  margin-top: 36px;
+  margin: 36px auto 0;
   font-size: 14px;
   color: var(--fg-2);
   max-width: 64ch;
   line-height: 1.6;
-  margin-left: auto;
-  margin-right: auto;
   text-align: center;
+}
+.customize-foot code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--acc-2);
+  background: var(--acc-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
 }
 .customize-foot code {
   font-family: var(--mono);
@@ -805,6 +874,7 @@ section + section { border-top: 1px solid var(--line); }
   pointer-events: none;
   user-select: none;
 }
+.fa-mini .fa-mini-action,
 .fa-mini button {
   padding: 5px 8px;
   border-radius: var(--mini-radius-inner, 6px);
@@ -812,7 +882,8 @@ section + section { border-top: 1px solid var(--line); }
   color: inherit;
   font: inherit;
   border: 0;
-  cursor: default;
+  display: inline-flex;
+  align-items: center;
 }
 .fa-mini .more {
   width: 22px; padding: 0;
@@ -830,12 +901,13 @@ section + section { border-top: 1px solid var(--line); }
 }
 @media (max-width: 720px) { .api-grid { grid-template-columns: 1fr; } }
 
+h3.api-block-h,
 .api-block-h {
   font-family: var(--sans);
   font-size: 14px;
   font-weight: 600;
   color: var(--fg);
-  margin-bottom: 12px;
+  margin: 0 0 12px;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -894,6 +966,9 @@ section + section { border-top: 1px solid var(--line); }
   margin-right: auto;
 }
 .foot-l { display: flex; align-items: center; gap: 14px; }
+.foot-r { display: flex; gap: 14px; }
+.foot-brand { color: var(--fg); font-weight: 600; font-family: var(--sans); }
+.foot-slash { color: var(--acc); }
 .foot a { transition: color 120ms; }
 .foot a:hover { color: var(--fg); }
 
@@ -1110,3 +1185,56 @@ section + section { border-top: 1px solid var(--line); }
   .topbar-l .ver { display: none; }
   .install-pill { font-size: 11.5px; }
 }
+
+/* ──────────────────────────────────────────────────────────────
+   TOUCH TARGETS — WCAG 2.5.5 (≥44×44 px on touch surfaces)
+   Applied at ≤720 px where touch is the dominant input method.
+   Keep desktop chips compact; expand them only when fingers arrive.
+   ──────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .topbar a,
+  .topbar-r a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .tabs .tab,
+  .hero-demo-tabs .tab,
+  .example-head .tabs .tab {
+    min-height: 44px;
+    height: auto;
+    padding-block: 10px;
+  }
+  .demo-trigger,
+  .btn,
+  .variant-summon,
+  .tile-summon {
+    min-height: 44px;
+    padding-block: 10px;
+  }
+  .tile-summon { padding-inline: 14px; }
+  .install-pill {
+    min-height: 44px;
+    padding-block: 8px;
+  }
+  .install-pill .copy-btn,
+  .code-copy {
+    min-width: 36px;
+    min-height: 36px;
+  }
+  .tile-toggle {
+    min-width: 36px;
+    min-height: 36px;
+  }
+  .demo-inbox .row,
+  .demo-gallery .tile,
+  .editor-link {
+    min-height: 44px;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   COLOR SCHEME — explicit light only (no system dark fallback).
+   Already declared in <meta>; kept here for redundancy.
+   ──────────────────────────────────────────────────────────── */
+html { color-scheme: light; }

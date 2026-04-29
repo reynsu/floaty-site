@@ -2,18 +2,20 @@ export function Footer() {
   return (
     <footer className="page foot">
       <div className="foot-l">
-        <span style={{ color: 'var(--fg)', fontWeight: 600, fontFamily: 'var(--sans)' }}>
-          floaty<span style={{ color: 'var(--acc)' }}>/</span>
+        <span className="foot-brand">
+          floaty<span className="foot-slash">/</span>
         </span>
         <span>v0.1.0</span>
         <span>MIT</span>
       </div>
-      <div style={{ display: 'flex', gap: 14 }}>
+      <nav className="foot-r" aria-label="Footer">
         <a href="https://github.com/reynsu/floaty" target="_blank" rel="noreferrer">github</a>
         <a href="https://www.npmjs.com/package/floaty" target="_blank" rel="noreferrer">npm</a>
         <a href="https://github.com/reynsu/floaty/issues" target="_blank" rel="noreferrer">issues</a>
-        <a href="#top">top ↑</a>
-      </div>
+        <a href="#top">
+          back to top <span aria-hidden="true">↑</span>
+        </a>
+      </nav>
     </footer>
   );
 }
