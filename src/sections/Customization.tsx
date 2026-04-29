@@ -25,6 +25,58 @@ const ICONS = {
   copy:     'M20 9h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2zM5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1',
 } as const;
 
+// ─── Dock app-icons (rendered as <DockIcon name="…" />) ──
+type DockIconName =
+  | 'calendar'
+  | 'mail'
+  | 'music'
+  | 'browser'
+  | 'photos'
+  | 'code'
+  | 'settings'
+  | 'files'
+  | 'maps'
+  | 'store';
+
+const DOCK_GLYPH: Record<DockIconName, string> = {
+  calendar: '31',
+  mail:     '✉',
+  music:    '♪',
+  browser:  '🌐',
+  photos:   '✿',
+  code:     '>_',
+  settings: '✱',
+  files:    '▣',
+  maps:     '◎',
+  store:    '◭',
+};
+
+const DockIcon = ({ name }: { name: DockIconName }) => (
+  <span className={`dock-app dock-app-${name}`} aria-hidden="true">
+    <span className="dock-app-glyph">{DOCK_GLYPH[name]}</span>
+  </span>
+);
+
+const DOCK_ITEMS: { id: string; label: string; name: DockIconName }[] = [
+  { id: 'calendar', label: 'Calendar', name: 'calendar' },
+  { id: 'mail',     label: 'Mail',     name: 'mail'     },
+  { id: 'music',    label: 'Music',    name: 'music'    },
+  { id: 'browser',  label: 'Browser',  name: 'browser'  },
+  { id: 'photos',   label: 'Photos',   name: 'photos'   },
+  { id: 'code',     label: 'Terminal', name: 'code'     },
+  { id: 'settings', label: 'Settings', name: 'settings' },
+  { id: 'files',    label: 'Files',    name: 'files'    },
+  { id: 'maps',     label: 'Maps',     name: 'maps'     },
+  { id: 'store',    label: 'Store',    name: 'store'    },
+];
+
+const dockActions: FloaterAction[] = DOCK_ITEMS.map(({ id, label, name }) => ({
+  id,
+  icon: <DockIcon name={name} />,
+  ariaLabel: label,
+  onSelect: () => {},
+}));
+
 type Band =
   | 'paper'
   | 'paper-deep'
@@ -50,8 +102,8 @@ type Variant = {
   band: Band;
   details: string[];
   cssCode: string;
-  /** "row" → flat .fa-mini grid · "radial"/"animated" → custom mini layout */
-  shape?: 'row' | 'radial' | 'animated';
+  /** "row" → flat .fa-mini grid · "radial"/"animated"/"dock" → custom mini layout */
+  shape?: 'row' | 'radial' | 'animated' | 'dock';
   /** Override the default text-label actions (e.g. icon-only for Animated). */
   actions?: FloaterAction[];
   featured?: boolean;
@@ -107,41 +159,56 @@ const variants: Variant[] = [
 }`,
   },
   {
-    id: 'radial',
+    id: 'dock',
     no: '03',
-    name: 'Radial',
-    themeClass: 'theme-radial',
-    desc: 'Donut layout — actions orbit a center using `--fa-i` / `--fa-n`. Pure CSS, no JS layout math, staggered entrance.',
-    band: 'paper',
+    name: 'Dock',
+    themeClass: 'theme-dock',
+    desc: 'macOS-style app dock — colorful tile icons on a brushed-metal bar. Hover lifts the icon. Overflow tray opens upward as a vertical stack.',
+    band: 'gradient',
     featured: true,
-    shape: 'radial',
+    shape: 'dock',
+    actions: dockActions,
     details: [
-      '--fa-display: block (escape flex row)',
-      '--fa-width / --fa-height: square canvas',
-      'transform per-button: rotate→translate→un-rotate',
-      'transition-delay: calc(var(--fa-i) * 35ms)',
+      'icon-only, 44 × 44 with gradient fills',
+      'hover: translateY(-6px) scale(1.10)',
+      'overflow popover renders icons stacked',
+      'brushed metal bar via inset highlights',
     ],
-    cssCode: `.theme-radial.fa-bar {
-  --fa-display: block;
-  --fa-width: 220px;
-  --fa-height: 220px;
-  --fa-radius-px: 90px;
-  --fa-bg: transparent;
-  --fa-shadow: none;
+    cssCode: `.theme-dock.fa-bar {
+  --fa-bg: linear-gradient(180deg,
+    oklch(82% 0.005 270),
+    oklch(72% 0.008 270));
+  --fa-fg: oklch(15% 0.018 270);
+  --fa-radius: 18px;
+  --fa-padding: 8px;
+  --fa-gap: 6px;
+  --fa-action-h: 44px;
+  --fa-action-flex: 0 0 44px;
+  --fa-width: auto;
+  --fa-action-bg: transparent;
+  --fa-shadow:
+    inset 0 1px 0 oklch(100% 0 0 / 0.6),
+    0 14px 32px oklch(15% 0.018 270 / 0.35);
 }
-.theme-radial .fa-action {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 56px; height: 56px;
-  border-radius: 50%;
-  /* --fa-i (index) and --fa-n (slot count)
-     are set by floaty as inline style vars */
-  transform:
-    translate(-50%, -50%)
-    rotate(calc(var(--fa-i) * 360deg / var(--fa-n)))
-    translateY(calc(-1 * var(--fa-radius-px)))
-    rotate(calc(-1 * var(--fa-i) * 360deg / var(--fa-n)));
-  transition-delay: calc(var(--fa-i) * 35ms);
+.theme-dock .fa-action {
+  border-radius: 11px;
+  transition: transform 200ms cubic-bezier(.2,.8,.2,1);
+}
+.theme-dock .fa-action:hover:not(:disabled) {
+  transform: translateY(-6px) scale(1.10);
+}
+/* overflow tray = vertical stack of icons,
+   pinned above the + button */
+.theme-dock .fa-popover {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  min-width: 0;
+}
+.theme-dock .fa-popover-item {
+  width: 44px; height: 44px;
+  padding: 0; border-radius: 11px;
 }`,
   },
   {
@@ -342,6 +409,7 @@ const liveActions = [
 function MiniBar({ themeClass, shape }: { themeClass: string; shape?: Variant['shape'] }) {
   if (shape === 'radial') return <MiniRadial themeClass={themeClass} />;
   if (shape === 'animated') return <MiniAnimated themeClass={themeClass} />;
+  if (shape === 'dock') return <MiniDock themeClass={themeClass} />;
   return (
     <div className={`fa-mini ${themeClass}`} aria-hidden="true">
       {previewActions.map((a) => (
@@ -390,6 +458,22 @@ function MiniAnimated({ themeClass }: { themeClass: string }) {
   );
 }
 
+const MINI_DOCK_ITEMS: DockIconName[] = [
+  'calendar', 'mail', 'music', 'browser', 'photos', 'code',
+];
+function MiniDock({ themeClass }: { themeClass: string }) {
+  return (
+    <div className={`fa-mini ${themeClass}`} aria-hidden="true">
+      {MINI_DOCK_ITEMS.map((name) => (
+        <span key={name} className="fa-mini-action">
+          <DockIcon name={name} />
+        </span>
+      ))}
+      <span className="fa-mini-action more">+</span>
+    </div>
+  );
+}
+
 function Summon({
   children,
   actions,
@@ -416,6 +500,7 @@ function Summon({
 function maxVisibleFor(shape?: Variant['shape']): number {
   if (shape === 'radial') return 6;
   if (shape === 'animated') return 4;
+  if (shape === 'dock') return 7;
   return 3;
 }
 
