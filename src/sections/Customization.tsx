@@ -38,9 +38,25 @@ type DockIconName =
   | 'maps'
   | 'store';
 
-const DOCK_GLYPH: Record<DockIconName, string> = {
+const Envelope = () => (
+  <svg
+    viewBox="0 0 32 32"
+    width="22"
+    height="22"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="4" y="7" width="24" height="18" rx="2.5" />
+    <path d="M4.5 9.5 16 18l11.5-8.5" />
+  </svg>
+);
+
+const DOCK_GLYPH: Record<DockIconName, ReactNode> = {
   calendar: '31',
-  mail:     '✉',
+  mail:     <Envelope />,
   music:    '♪',
   browser:  '🌐',
   photos:   '✿',

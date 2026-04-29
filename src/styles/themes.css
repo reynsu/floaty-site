@@ -1173,8 +1173,12 @@
 .dock-app-glyph {
   font-size: 18px;
   line-height: 1;
+  display: grid;
+  place-items: center;
 }
+.dock-app-glyph svg { width: 22px; height: 22px; display: block; }
 .fa-mini-action .dock-app-glyph { font-size: 12px; }
+.fa-mini-action .dock-app-glyph svg { width: 14px; height: 14px; }
 
 .dock-app-calendar { background: linear-gradient(180deg, oklch(74% 0.18 25),  oklch(56% 0.22 25));  }
 .dock-app-mail     { background: linear-gradient(180deg, oklch(78% 0.14 240), oklch(58% 0.18 250)); }
