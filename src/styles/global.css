@@ -1440,12 +1440,14 @@ html { color-scheme: light; }
 .css-dialog-frame {
   display: flex;
   flex-direction: column;
-  background: oklch(13% 0.018 270);
-  border-radius: 10px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
   overflow: hidden;
   box-shadow:
-    0 1px 0 oklch(100% 0 0 / 0.06) inset,
-    0 24px 60px oklch(0% 0 0 / 0.45);
+    0 1px 0 oklch(100% 0 0 / 0.6) inset,
+    0 24px 60px oklch(15% 0.018 270 / 0.18);
   max-height: min(80vh, 640px);
 }
 
@@ -1455,8 +1457,8 @@ html { color-scheme: light; }
   justify-content: space-between;
   gap: 12px;
   padding: 12px 12px 12px 16px;
-  border-bottom: 1px solid oklch(100% 0 0 / 0.06);
-  background: oklch(16% 0.018 270);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
 }
 .css-dialog-title {
   display: flex;
@@ -1467,13 +1469,13 @@ html { color-scheme: light; }
 .css-dialog-no {
   font-family: var(--mono);
   font-size: 12px;
-  color: oklch(60% 0.05 270);
+  color: var(--fg-3);
   letter-spacing: 0.04em;
 }
 .css-dialog-title h3 {
   font-size: 15px;
   font-weight: 600;
-  color: oklch(96% 0.005 80);
+  color: var(--fg);
   margin: 0;
   letter-spacing: -0.01em;
 }
@@ -1487,23 +1489,25 @@ html { color-scheme: light; }
   height: 30px;
   padding: 0 12px;
   border-radius: 6px;
-  background: oklch(28% 0.018 270);
-  color: oklch(96% 0.005 80);
-  border: 1px solid oklch(100% 0 0 / 0.08);
+  background: var(--fg);
+  color: var(--bg);
+  border: 1px solid var(--fg);
   font-size: 12px;
   font-weight: 500;
   font-family: var(--sans);
   letter-spacing: 0.01em;
   cursor: pointer;
-  transition: background 140ms, color 140ms;
+  transition: background 140ms, color 140ms, border-color 140ms;
 }
-.css-dialog-copy:hover { background: oklch(34% 0.018 270); }
+.css-dialog-copy:hover { background: oklch(28% 0.018 270); border-color: oklch(28% 0.018 270); }
 .css-dialog-copy[data-state='copied'] {
-  background: oklch(40% 0.18 145);
+  background: oklch(48% 0.16 145);
+  border-color: oklch(48% 0.16 145);
   color: oklch(98% 0.02 145);
 }
 .css-dialog-copy[data-state='failed'] {
-  background: oklch(40% 0.20 28);
+  background: oklch(54% 0.22 28);
+  border-color: oklch(54% 0.22 28);
   color: oklch(98% 0.02 28);
 }
 .css-dialog-close {
@@ -1513,7 +1517,7 @@ html { color-scheme: light; }
   place-items: center;
   border-radius: 6px;
   background: transparent;
-  color: oklch(75% 0.005 270);
+  color: var(--fg-2);
   border: 1px solid transparent;
   font-size: 20px;
   line-height: 1;
@@ -1521,8 +1525,8 @@ html { color-scheme: light; }
   transition: background 140ms, color 140ms;
 }
 .css-dialog-close:hover {
-  background: oklch(24% 0.018 270);
-  color: oklch(96% 0.005 80);
+  background: var(--bg-2);
+  color: var(--fg);
 }
 
 .css-dialog-pre {
@@ -1532,20 +1536,21 @@ html { color-scheme: light; }
   font-family: var(--mono);
   font-size: 12.5px;
   line-height: 1.7;
-  color: oklch(92% 0.005 80);
-  background: oklch(13% 0.018 270);
+  color: var(--fg);
+  background: var(--bg-2);
   white-space: pre;
   scrollbar-width: thin;
-  scrollbar-color: oklch(40% 0.02 270) transparent;
+  scrollbar-color: var(--line-3) transparent;
 }
 .css-dialog-pre::-webkit-scrollbar { width: 8px; height: 8px; }
 .css-dialog-pre::-webkit-scrollbar-thumb {
-  background: oklch(35% 0.02 270);
+  background: var(--line-3);
   border-radius: 4px;
 }
-.css-dialog-pre .csskey { color: oklch(80% 0.10 240); }
-.css-dialog-pre .cssval { color: oklch(82% 0.13 110); }
-.css-dialog-pre .csscom { color: oklch(50% 0.02 270); font-style: italic; }
+/* Light syntax palette tuned for paper background */
+.css-dialog-pre .csskey { color: oklch(40% 0.18 250); }   /* CSS custom-prop key — blue */
+.css-dialog-pre .cssval { color: oklch(48% 0.18 145); }   /* numbers / oklch / strings — green */
+.css-dialog-pre .csscom { color: var(--fg-3); font-style: italic; }
 
 @media (prefers-reduced-motion: reduce) {
   .css-dialog,
