@@ -1054,6 +1054,17 @@
   border-radius: 11px;
   background: transparent;
   transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden; /* clip the gradient to the rounded square */
+}
+/* The DockIcon's gradient lives in .dock-app and is sized via 100%
+   of its parent. Force the wrapping .fa-icon span to fill the button
+   so the gradient covers the entire 44 × 44 tile (otherwise inline-flex
+   collapses it to glyph size). */
+.theme-dock.fa-bar .fa-action .fa-icon,
+.theme-dock.fa-bar .fa-popover-item .fa-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .theme-dock.fa-bar .fa-action:hover:not(:disabled),
 .theme-dock.fa-bar .fa-more:hover:not(:disabled) {
