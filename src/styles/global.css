@@ -708,6 +708,16 @@ section + section { border-top: 1px solid var(--line); }
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   background: var(--bg);
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: background 140ms ease;
+}
+.tile-variant:hover { background: var(--bg-2); }
+.tile-variant:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: -2px;
 }
 .tile-variant:nth-child(3n) { border-right: 0; }
 @media (max-width: 880px) {

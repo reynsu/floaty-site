@@ -1,5 +1,29 @@
-import { useState, type ReactNode } from 'react';
-import { FloaterActionsProvider, useFloaterActions } from 'floaty';
+import { useState, type KeyboardEvent, type ReactNode } from 'react';
+import { FloaterActionsProvider, useFloaterActions, type FloaterAction } from 'floaty';
+
+// ─── Inline icons (zero deps) ────────────────────────
+const Stroke = ({ d }: { d: string }) => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d={d} />
+  </svg>
+);
+
+const ICONS = {
+  heart:    'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z',
+  share:    'M16 6l-4-4-4 4 M12 2v13 M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4',
+  bookmark: 'M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z',
+  copy:     'M20 9h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2zM5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1',
+} as const;
 
 type Band =
   | 'paper'
@@ -26,8 +50,10 @@ type Variant = {
   band: Band;
   details: string[];
   cssCode: string;
-  /** "row" → flat .fa-mini grid · "radial"/"arc" → custom mini layout */
-  shape?: 'row' | 'radial' | 'arc';
+  /** "row" → flat .fa-mini grid · "radial"/"animated" → custom mini layout */
+  shape?: 'row' | 'radial' | 'animated';
+  /** Override the default text-label actions (e.g. icon-only for Animated). */
+  actions?: FloaterAction[];
   featured?: boolean;
 };
 
@@ -119,37 +145,63 @@ const variants: Variant[] = [
 }`,
   },
   {
-    id: 'arc',
+    id: 'animated',
     no: '04',
-    name: 'Arc',
-    themeClass: 'theme-arc',
-    desc: 'Half-moon fan — same primitives as radial, but constrained to 180°. Buttons rise from a baseline.',
+    name: 'Animated',
+    themeClass: 'theme-animated',
+    desc: 'Icons bob constantly while the bar is open. On dismiss the whole bar collapses to a circle in the center, then drops away — pure CSS keyframes.',
     band: 'dark',
-    shape: 'arc',
-    details: [
-      'spread = 180° (not 360°)',
-      'angle = -90° + i * 180° / (n-1)',
-      'shape only changes one transform line',
-      'inherits --fa-i / --fa-n knobs',
+    shape: 'animated',
+    actions: [
+      { id: 'heart',    icon: <Stroke d={ICONS.heart} />,    ariaLabel: 'Like',     onSelect: () => {} },
+      { id: 'bookmark', icon: <Stroke d={ICONS.bookmark} />, ariaLabel: 'Bookmark', onSelect: () => {} },
+      { id: 'share',    icon: <Stroke d={ICONS.share} />,    ariaLabel: 'Share',    onSelect: () => {} },
+      { id: 'copy',     icon: <Stroke d={ICONS.copy} />,     ariaLabel: 'Copy',     onSelect: () => {} },
     ],
-    cssCode: `.theme-arc.fa-bar {
-  --fa-display: block;
-  --fa-width: 280px;
-  --fa-height: 150px;
-  --fa-radius-px: 110px;
+    details: [
+      'idle: per-button bob, --fa-i staggers delay',
+      'exit: keyframe collapses bar 1 → 0.5 → drop',
+      'buttons converge toward center on close',
+      'pure CSS — no JS animation lib',
+    ],
+    cssCode: `.theme-animated.fa-bar {
+  --fa-bg: oklch(20% 0.018 270);
+  --fa-fg: oklch(96% 0.005 80);
+  --fa-radius: 999px;
+  --fa-radius-inner: 999px;
+  --fa-action-h: 44px;
+  --fa-action-flex: 0 0 44px;
+  --fa-width: auto;
 }
-.theme-arc .fa-action {
-  position: absolute;
-  left: 50%; bottom: 0;
-  width: 48px; height: 48px;
-  border-radius: 50%;
-  transform:
-    translate(-50%, 50%)
-    rotate(calc(-90deg + var(--fa-i) * 180deg
-                  / max(1, calc(var(--fa-n) - 1))))
-    translateY(calc(-1 * var(--fa-radius-px)))
-    rotate(calc(90deg - var(--fa-i) * 180deg
-                  / max(1, calc(var(--fa-n) - 1))));
+/* idle bob — staggered by button index */
+.theme-animated.fa-bar[data-state='open'] .fa-action {
+  animation: fa-anim-bob 1.6s ease-in-out infinite;
+  animation-delay: calc(var(--fa-i) * 120ms);
+}
+@keyframes fa-anim-bob {
+  0%, 100% { transform: translateY(0)    scale(1);    }
+  50%      { transform: translateY(-4px) scale(1.06); }
+}
+/* exit: bar collapses to a circle in the middle, then drops */
+.theme-animated.fa-bar[data-state='closed'] {
+  animation: fa-anim-collapse 540ms cubic-bezier(.55,0,.35,1) forwards;
+  transition: transform 540ms ease-in;  /* ensure transitionend fires */
+}
+@keyframes fa-anim-collapse {
+  0%   { transform: translate(-50%, 0) scale(1);   border-radius: 999px; opacity: 1 }
+  45%  { transform: translate(-50%, 0) scale(.45); border-radius: 50%;   opacity: 1 }
+  100% { transform: translate(-50%, 220%) scale(.4); border-radius: 50%; opacity: 0 }
+}
+.theme-animated.fa-bar[data-state='closed'] .fa-action {
+  animation: fa-anim-converge 240ms ease-in forwards;
+}
+@keyframes fa-anim-converge {
+  to {
+    transform:
+      translateX(calc((var(--fa-n) / 2 - var(--fa-i) - .5) * -48px))
+      scale(0);
+    opacity: 0;
+  }
 }`,
   },
   {
@@ -218,32 +270,8 @@ const variants: Variant[] = [
 }`,
   },
   {
-    id: 'acid',
-    no: '08',
-    name: 'Acid',
-    themeClass: 'theme-acid',
-    desc: 'Saturated lime, uppercase, tight letter-spacing. Loud on purpose — for confirmation flows that must be impossible to miss.',
-    band: 'lime',
-    details: [
-      '--fa-bg: lime · chroma 0.20',
-      'text-transform: uppercase',
-      'font-weight: 700',
-      'letter-spacing: 0.02 em',
-    ],
-    cssCode: `.theme-acid.fa-bar {
-  --fa-bg: oklch(78% 0.20 110);
-  --fa-fg: oklch(15% 0.04 110);
-  --fa-border: oklch(60% 0.18 110);
-  --fa-radius: 8px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  font-size: 12px;
-}`,
-  },
-  {
     id: 'tape',
-    no: '09',
+    no: '08',
     name: 'Tape',
     themeClass: 'theme-tape',
     desc: 'Masking-tape on a wall — dashed border, drawn shadow, ~1° tilt.',
@@ -268,7 +296,7 @@ const variants: Variant[] = [
   },
   {
     id: 'pixel',
-    no: '10',
+    no: '09',
     name: 'Pixel',
     themeClass: 'theme-pixel',
     desc: '8-bit chunky — layered offset shadows mimic stepped pixel borders.',
@@ -313,7 +341,7 @@ const liveActions = [
 /* ── Mini bar previews ─────────────────────────────── */
 function MiniBar({ themeClass, shape }: { themeClass: string; shape?: Variant['shape'] }) {
   if (shape === 'radial') return <MiniRadial themeClass={themeClass} />;
-  if (shape === 'arc') return <MiniArc themeClass={themeClass} />;
+  if (shape === 'animated') return <MiniAnimated themeClass={themeClass} />;
   return (
     <div className={`fa-mini ${themeClass}`} aria-hidden="true">
       {previewActions.map((a) => (
@@ -344,28 +372,38 @@ function MiniRadial({ themeClass }: { themeClass: string }) {
   );
 }
 
-const MINI_ARC_LABELS = ['↖', '↑', '↗', '+'];
-function MiniArc({ themeClass }: { themeClass: string }) {
-  const n = MINI_ARC_LABELS.length;
+const MINI_ANIMATED_ICONS = [ICONS.heart, ICONS.bookmark, ICONS.share, ICONS.copy];
+function MiniAnimated({ themeClass }: { themeClass: string }) {
+  const n = MINI_ANIMATED_ICONS.length;
   return (
     <div className={`fa-mini ${themeClass}`} aria-hidden="true">
-      {MINI_ARC_LABELS.map((l, i) => (
+      {MINI_ANIMATED_ICONS.map((d, i) => (
         <span
           key={i}
           className="fa-mini-action"
           style={{ ['--mini-i' as string]: i, ['--mini-n' as string]: n }}
         >
-          {l}
+          <Stroke d={d} />
         </span>
       ))}
     </div>
   );
 }
 
-function Summon({ children }: { children?: ReactNode }) {
+function Summon({
+  children,
+  actions,
+}: {
+  children?: ReactNode;
+  actions?: FloaterAction[];
+}) {
   const { show } = useFloaterActions();
   return (
-    <button type="button" className="variant-summon" onClick={() => show(liveActions)}>
+    <button
+      type="button"
+      className="variant-summon"
+      onClick={() => show(actions ?? liveActions)}
+    >
       {children ?? (
         <>
           Summon <span aria-hidden="true">↑</span>
@@ -375,9 +413,14 @@ function Summon({ children }: { children?: ReactNode }) {
   );
 }
 
+function maxVisibleFor(shape?: Variant['shape']): number {
+  if (shape === 'radial') return 6;
+  if (shape === 'animated') return 4;
+  return 3;
+}
+
 // ─── Featured (spotlight) ────────────────────────────
 function Spotlight({ v }: { v: Variant }) {
-  const provMaxVisible = v.shape === 'radial' ? 6 : v.shape === 'arc' ? 5 : 3;
   return (
     <article className={`spotlight band-${v.band}`}>
       <div className="spotlight-stage">
@@ -395,8 +438,8 @@ function Spotlight({ v }: { v: Variant }) {
           ))}
         </ul>
         <div className="spotlight-actions">
-          <FloaterActionsProvider maxVisible={provMaxVisible} className={v.themeClass}>
-            <Summon>
+          <FloaterActionsProvider maxVisible={maxVisibleFor(v.shape)} className={v.themeClass}>
+            <Summon actions={v.actions}>
               Summon at the bottom of the page <span aria-hidden="true">↗</span>
             </Summon>
           </FloaterActionsProvider>
@@ -407,12 +450,35 @@ function Spotlight({ v }: { v: Variant }) {
   );
 }
 
-// ─── Mosaic ──────────────────────────────────────────
+// ─── Mosaic — entire tile is the trigger ─────────────
 function Tile({ v }: { v: Variant }) {
-  const [openCss, setOpenCss] = useState(false);
-  const provMaxVisible = v.shape === 'radial' ? 6 : v.shape === 'arc' ? 5 : 3;
   return (
-    <div className={`tile-variant band-${v.band}`}>
+    <FloaterActionsProvider maxVisible={maxVisibleFor(v.shape)} className={v.themeClass}>
+      <TileBody v={v} />
+    </FloaterActionsProvider>
+  );
+}
+
+function TileBody({ v }: { v: Variant }) {
+  const [openCss, setOpenCss] = useState(false);
+  const { show } = useFloaterActions();
+  const handleSummon = () => show(v.actions ?? liveActions);
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleSummon();
+    }
+  };
+
+  return (
+    <div
+      className={`tile-variant band-${v.band}`}
+      role="button"
+      tabIndex={0}
+      aria-label={`Summon ${v.name} bar`}
+      onClick={handleSummon}
+      onKeyDown={onKeyDown}
+    >
       <div className="tile-stage">
         <MiniBar themeClass={v.themeClass} shape={v.shape} />
       </div>
@@ -421,20 +487,18 @@ function Tile({ v }: { v: Variant }) {
           <span className="tile-no">{v.no}</span>
           <h3 className="tile-name">{v.name}</h3>
         </div>
-        <div className="tile-actions">
-          <FloaterActionsProvider maxVisible={provMaxVisible} className={v.themeClass}>
-            <SummonInline />
-          </FloaterActionsProvider>
-          <button
-            type="button"
-            className="tile-toggle"
-            aria-pressed={openCss}
-            aria-label={openCss ? `Hide CSS for ${v.name}` : `Show CSS for ${v.name}`}
-            onClick={() => setOpenCss((o) => !o)}
-          >
-            <span aria-hidden="true">{`{ }`}</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          className="tile-toggle"
+          aria-pressed={openCss}
+          aria-label={openCss ? `Hide CSS for ${v.name}` : `Show CSS for ${v.name}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenCss((o) => !o);
+          }}
+        >
+          <span aria-hidden="true">{`{ }`}</span>
+        </button>
       </div>
       <p className="tile-desc">{v.desc}</p>
       <div className="tile-css" data-open={openCss}>
@@ -443,15 +507,6 @@ function Tile({ v }: { v: Variant }) {
         </div>
       </div>
     </div>
-  );
-}
-
-function SummonInline() {
-  const { show } = useFloaterActions();
-  return (
-    <button type="button" className="tile-summon" onClick={() => show(liveActions)}>
-      Summon <span aria-hidden="true">↑</span>
-    </button>
   );
 }
 
@@ -485,7 +540,7 @@ export function Customization() {
         <div className="section-h">
           <div>
             <span className="kicker">Customization</span>
-            <h2>10 themes from one className.</h2>
+            <h2>9 themes from one className.</h2>
           </div>
           <span className="section-h-meta">
             Three featured variants below — including layouts that escape the row entirely.
