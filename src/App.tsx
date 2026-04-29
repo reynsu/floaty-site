@@ -1,25 +1,21 @@
-import { Nav } from './components/Nav';
-import { Hero } from './sections/Hero';
-import { Features } from './sections/Features';
-import { Mobile } from './sections/Mobile';
-import { Desktop } from './sections/Desktop';
-import { Theming } from './sections/Theming';
-import { QuickStart } from './sections/QuickStart';
-import { API } from './sections/API';
-import { Footer } from './sections/Footer';
+import { Cover } from './sections/Cover';
+import { Manifesto } from './sections/Manifesto';
+import { Specimen } from './sections/Specimen';
+import { InUse } from './sections/InUse';
+import { Specifications } from './sections/Specifications';
+import { FieldGuide } from './sections/FieldGuide';
+import { Colophon } from './sections/Colophon';
 
 export function App() {
   return (
-    <>
-      <Nav />
-      <Hero />
-      <Features />
-      <Mobile />
-      <Desktop />
-      <Theming />
-      <QuickStart />
-      <API />
-      <Footer />
-    </>
+    <main>
+      <Cover />
+      <Manifesto />
+      <Specimen />
+      <InUse />
+      <Specifications />
+      <FieldGuide />
+      <Colophon />
+    </main>
   );
 }
