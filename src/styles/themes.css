@@ -1180,13 +1180,14 @@
 .fa-mini-action .dock-app-glyph { font-size: 12px; }
 .fa-mini-action .dock-app-glyph svg { width: 14px; height: 14px; }
 
-.dock-app-calendar { background: linear-gradient(180deg, oklch(74% 0.18 25),  oklch(56% 0.22 25));  }
-.dock-app-mail     { background: linear-gradient(180deg, oklch(78% 0.14 240), oklch(58% 0.18 250)); }
-.dock-app-music    { background: linear-gradient(180deg, oklch(76% 0.18 0),   oklch(60% 0.22 350)); }
-.dock-app-browser  { background: linear-gradient(180deg, oklch(80% 0.14 200), oklch(58% 0.16 220)); }
-.dock-app-photos   { background: linear-gradient(180deg, oklch(96% 0.005 80), oklch(82% 0.02 60));  color: oklch(28% 0.18 350); }
-.dock-app-code     { background: linear-gradient(180deg, oklch(28% 0.02 270), oklch(13% 0 0));      }
-.dock-app-settings { background: linear-gradient(180deg, oklch(82% 0.005 270),oklch(58% 0.01 270)); color: oklch(25% 0.018 270); }
-.dock-app-files    { background: linear-gradient(180deg, oklch(88% 0.16 90),  oklch(72% 0.18 80));  color: oklch(25% 0.10 60); }
-.dock-app-maps     { background: linear-gradient(180deg, oklch(78% 0.16 145), oklch(56% 0.18 145)); }
-.dock-app-store    { background: linear-gradient(180deg, oklch(74% 0.18 15),  oklch(54% 0.22 18));  }
+/* Music-playlist controls — coherent palette, play stands out (green) */
+.dock-app-shuffle  { background: linear-gradient(180deg, oklch(72% 0.16 280), oklch(50% 0.20 285)); }
+.dock-app-previous { background: linear-gradient(180deg, oklch(38% 0.04 270), oklch(20% 0.02 270)); }
+.dock-app-play     { background: linear-gradient(180deg, oklch(78% 0.20 145), oklch(58% 0.22 148)); }
+.dock-app-next     { background: linear-gradient(180deg, oklch(38% 0.04 270), oklch(20% 0.02 270)); }
+.dock-app-repeat   { background: linear-gradient(180deg, oklch(78% 0.14 200), oklch(56% 0.16 215)); }
+.dock-app-heart    { background: linear-gradient(180deg, oklch(76% 0.18 18),  oklch(54% 0.22 22));  }
+.dock-app-queue    { background: linear-gradient(180deg, oklch(80% 0.16 85),  oklch(60% 0.18 75));  color: oklch(25% 0.10 60); }
+.dock-app-lyrics   { background: linear-gradient(180deg, oklch(72% 0.16 320), oklch(52% 0.20 322)); }
+.dock-app-volume   { background: linear-gradient(180deg, oklch(76% 0.16 165), oklch(56% 0.18 162)); }
+.dock-app-share    { background: linear-gradient(180deg, oklch(78% 0.14 250), oklch(58% 0.18 252)); }

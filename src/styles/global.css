@@ -680,7 +680,7 @@ section + section { border-top: 1px solid var(--line); }
   font-family: var(--mono);
   font-size: 12px;
   line-height: 1.65;
-  height: 252px;
+  height: 360px;
   overflow: auto;
   white-space: pre;
   scrollbar-width: thin;
@@ -1268,3 +1268,116 @@ h3.api-block-h,
    Already declared in <meta>; kept here for redundancy.
    ──────────────────────────────────────────────────────────── */
 html { color-scheme: light; }
+
+/* ────────────────────────────────────────────────────────────
+ * Animations — purposeful motion, GPU-friendly.
+ * Hero stagger fires on mount (no JS). Section/card reveals
+ * are driven by useScrollReveal toggling [data-reveal="in"].
+ * ──────────────────────────────────────────────────────────── */
+:root {
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ── Hero entrance ─────────────────────────────────────────── */
+@keyframes fa-rise {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.hero .kicker,
+.hero h1,
+.hero-prose,
+.hero-cta,
+.hero-demo {
+  animation: fa-rise 700ms var(--ease-out-quint) backwards;
+}
+.hero .kicker  { animation-delay:   0ms; animation-duration: 500ms; }
+.hero h1       { animation-delay:  80ms; }
+.hero-prose    { animation-delay: 220ms; }
+.hero-cta      { animation-delay: 320ms; }
+.hero-demo     { animation-delay: 440ms; animation-duration: 800ms; }
+
+/* ── Scroll-reveal pattern ─────────────────────────────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 600ms var(--ease-out-quint),
+    transform 600ms var(--ease-out-quint);
+  will-change: opacity, transform;
+}
+[data-reveal="in"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
+/* Stagger tiles in the mosaic so a row reveals as a wave */
+.tile-grid > .tile-variant[data-reveal] {
+  transition-delay: 0ms;
+}
+.tile-grid > .tile-variant:nth-child(3n + 2)[data-reveal] { transition-delay: 70ms; }
+.tile-grid > .tile-variant:nth-child(3n + 3)[data-reveal] { transition-delay: 140ms; }
+@media (max-width: 880px) {
+  .tile-grid > .tile-variant[data-reveal] { transition-delay: 0ms; }
+  .tile-grid > .tile-variant:nth-child(2n)[data-reveal] { transition-delay: 80ms; }
+}
+
+/* ── Tile-stage micro-zoom on hover (matches the clickable tile) */
+.tile-variant .tile-stage > * {
+  transition: transform 360ms var(--ease-out-quint);
+  will-change: transform;
+}
+.tile-variant:hover .tile-stage > * {
+  transform: scale(1.04);
+}
+.tile-variant:active .tile-stage > * {
+  transform: scale(0.99);
+  transition-duration: 140ms;
+}
+
+/* ── Spotlight name — subtle underline grow on parent hover */
+.spotlight-name {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1.5px;
+  transition: background-size 480ms var(--ease-out-quint);
+}
+.spotlight:hover .spotlight-name {
+  background-size: 32% 1.5px;
+}
+
+/* ── Tab indicator — Demo/Code crossfade (in tile cards)      */
+.example-body[data-tab] {
+  animation: fa-tab-fade 280ms var(--ease-out-quint);
+}
+@keyframes fa-tab-fade {
+  from { opacity: 0; transform: translate3d(0, 6px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* ── Reduced motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero .kicker,
+  .hero h1,
+  .hero-prose,
+  .hero-cta,
+  .hero-demo,
+  .example-body[data-tab] {
+    animation: none;
+  }
+  [data-reveal],
+  [data-reveal="in"] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .tile-variant .tile-stage > * { transition: none; }
+  .tile-variant:hover .tile-stage > * { transform: none; }
+  .spotlight-name { transition: none; background-size: 0% 1.5px; }
+}

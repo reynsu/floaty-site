@@ -25,22 +25,22 @@ const ICONS = {
   copy:     'M20 9h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2zM5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1',
 } as const;
 
-// ─── Dock app-icons (rendered as <DockIcon name="…" />) ──
+// ─── Dock — music-player controls (rendered as <DockIcon name="…" />)
 type DockIconName =
-  | 'calendar'
-  | 'mail'
-  | 'music'
-  | 'browser'
-  | 'photos'
-  | 'code'
-  | 'settings'
-  | 'files'
-  | 'maps'
-  | 'store';
+  | 'shuffle'
+  | 'previous'
+  | 'play'
+  | 'next'
+  | 'repeat'
+  | 'heart'
+  | 'queue'
+  | 'lyrics'
+  | 'volume'
+  | 'share';
 
-const Envelope = () => (
+const SvgIcon = ({ children }: { children: ReactNode }) => (
   <svg
-    viewBox="0 0 32 32"
+    viewBox="0 0 24 24"
     width="22"
     height="22"
     fill="none"
@@ -49,22 +49,83 @@ const Envelope = () => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <rect x="4" y="7" width="24" height="18" rx="2.5" />
-    <path d="M4.5 9.5 16 18l11.5-8.5" />
+    {children}
   </svg>
 );
 
 const DOCK_GLYPH: Record<DockIconName, ReactNode> = {
-  calendar: '31',
-  mail:     <Envelope />,
-  music:    '♪',
-  browser:  '🌐',
-  photos:   '✿',
-  code:     '>_',
-  settings: '✱',
-  files:    '▣',
-  maps:     '◎',
-  store:    '◭',
+  shuffle: (
+    <SvgIcon>
+      <path d="M16 3h5v5" />
+      <path d="M4 20 21 3" />
+      <path d="M21 16v5h-5" />
+      <path d="M15 15l6 6" />
+      <path d="M4 4l5 5" />
+    </SvgIcon>
+  ),
+  previous: (
+    <SvgIcon>
+      <polygon points="19,5 8,12 19,19" fill="currentColor" stroke="none" />
+      <line x1="5" y1="5" x2="5" y2="19" />
+    </SvgIcon>
+  ),
+  play: (
+    <SvgIcon>
+      <polygon points="6,4 20,12 6,20" fill="currentColor" stroke="none" />
+    </SvgIcon>
+  ),
+  next: (
+    <SvgIcon>
+      <polygon points="5,5 16,12 5,19" fill="currentColor" stroke="none" />
+      <line x1="19" y1="5" x2="19" y2="19" />
+    </SvgIcon>
+  ),
+  repeat: (
+    <SvgIcon>
+      <polyline points="17 1 21 5 17 9" />
+      <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+      <polyline points="7 23 3 19 7 15" />
+      <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+    </SvgIcon>
+  ),
+  heart: (
+    <SvgIcon>
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="currentColor" stroke="none" />
+    </SvgIcon>
+  ),
+  queue: (
+    <SvgIcon>
+      <line x1="9" y1="6" x2="20" y2="6" />
+      <line x1="9" y1="12" x2="20" y2="12" />
+      <line x1="9" y1="18" x2="20" y2="18" />
+      <circle cx="4" cy="6" r="1.2" fill="currentColor" stroke="none" />
+      <circle cx="4" cy="12" r="1.2" fill="currentColor" stroke="none" />
+      <circle cx="4" cy="18" r="1.2" fill="currentColor" stroke="none" />
+    </SvgIcon>
+  ),
+  lyrics: (
+    <SvgIcon>
+      <path d="M9 18V6l11-2v12" />
+      <circle cx="6" cy="18" r="3" fill="currentColor" stroke="none" />
+      <circle cx="17" cy="16" r="3" fill="currentColor" stroke="none" />
+    </SvgIcon>
+  ),
+  volume: (
+    <SvgIcon>
+      <polygon points="11,5 6,9 2,9 2,15 6,15 11,19" fill="currentColor" stroke="none" />
+      <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+      <path d="M19 5a9 9 0 0 1 0 14" />
+    </SvgIcon>
+  ),
+  share: (
+    <SvgIcon>
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <line x1="8.6" y1="13.5" x2="15.4" y2="17.5" />
+      <line x1="15.4" y1="6.5" x2="8.6" y2="10.5" />
+    </SvgIcon>
+  ),
 };
 
 const DockIcon = ({ name }: { name: DockIconName }) => (
@@ -74,16 +135,16 @@ const DockIcon = ({ name }: { name: DockIconName }) => (
 );
 
 const DOCK_ITEMS: { id: string; label: string; name: DockIconName }[] = [
-  { id: 'calendar', label: 'Calendar', name: 'calendar' },
-  { id: 'mail',     label: 'Mail',     name: 'mail'     },
-  { id: 'music',    label: 'Music',    name: 'music'    },
-  { id: 'browser',  label: 'Browser',  name: 'browser'  },
-  { id: 'photos',   label: 'Photos',   name: 'photos'   },
-  { id: 'code',     label: 'Terminal', name: 'code'     },
-  { id: 'settings', label: 'Settings', name: 'settings' },
-  { id: 'files',    label: 'Files',    name: 'files'    },
-  { id: 'maps',     label: 'Maps',     name: 'maps'     },
-  { id: 'store',    label: 'Store',    name: 'store'    },
+  { id: 'shuffle',  label: 'Shuffle',  name: 'shuffle'  },
+  { id: 'previous', label: 'Previous', name: 'previous' },
+  { id: 'play',     label: 'Play',     name: 'play'     },
+  { id: 'next',     label: 'Next',     name: 'next'     },
+  { id: 'repeat',   label: 'Repeat',   name: 'repeat'   },
+  { id: 'heart',    label: 'Like',     name: 'heart'    },
+  { id: 'queue',    label: 'Queue',    name: 'queue'    },
+  { id: 'lyrics',   label: 'Lyrics',   name: 'lyrics'   },
+  { id: 'volume',   label: 'Volume',   name: 'volume'   },
+  { id: 'share',    label: 'Share',    name: 'share'    },
 ];
 
 const dockActions: FloaterAction[] = DOCK_ITEMS.map(({ id, label, name }) => ({
@@ -475,7 +536,7 @@ function MiniAnimated({ themeClass }: { themeClass: string }) {
 }
 
 const MINI_DOCK_ITEMS: DockIconName[] = [
-  'calendar', 'mail', 'music', 'browser', 'photos', 'code',
+  'shuffle', 'previous', 'play', 'next', 'repeat', 'heart',
 ];
 function MiniDock({ themeClass }: { themeClass: string }) {
   return (
@@ -523,7 +584,7 @@ function maxVisibleFor(shape?: Variant['shape']): number {
 // ─── Featured (spotlight) ────────────────────────────
 function Spotlight({ v }: { v: Variant }) {
   return (
-    <article className={`spotlight band-${v.band}`}>
+    <article className={`spotlight band-${v.band}`} data-reveal="">
       <div className="spotlight-stage">
         <MiniBar themeClass={v.themeClass} shape={v.shape} />
       </div>
@@ -574,6 +635,7 @@ function TileBody({ v }: { v: Variant }) {
   return (
     <div
       className={`tile-variant band-${v.band}`}
+      data-reveal=""
       role="button"
       tabIndex={0}
       aria-label={`Summon ${v.name} bar`}
@@ -638,7 +700,7 @@ export function Customization() {
   return (
     <section id="customize">
       <div className="page">
-        <div className="section-h">
+        <div className="section-h" data-reveal="">
           <div>
             <span className="kicker">Customization</span>
             <h2>9 themes from one className.</h2>

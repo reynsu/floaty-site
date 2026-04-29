@@ -17,7 +17,7 @@ type ExampleCardProps = {
 function ExampleCard({ no, name, desc, demo, code, hint }: ExampleCardProps) {
   const [tab, setTab] = useState<'demo' | 'code'>('demo');
   return (
-    <article className="example">
+    <article className="example" data-reveal="">
       <header className="example-head">
         <span className="example-no">{no}</span>
         <div>
@@ -517,7 +517,7 @@ export function Examples() {
   return (
     <section id="examples">
       <div className="page">
-        <div className="section-h">
+        <div className="section-h" data-reveal="">
           <div>
             <span className="kicker">Examples</span>
             <h2>Seven real use cases.</h2>
