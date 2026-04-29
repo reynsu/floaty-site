@@ -131,10 +131,14 @@ section + section { border-top: 1px solid var(--line); }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in oklch, var(--bg) 85%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  /* Opaque background instead of backdrop-filter — sticky + blur is the
+     classic Chrome/Safari scroll-jank pattern. The visual difference is
+     marginal on a paper background; the perf win is large. */
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
+  /* Isolate from the rest of the page so the topbar can't trigger paints
+     in unrelated areas during scroll. */
+  contain: layout paint style;
 }
 .topbar-inner {
   display: flex;
@@ -1302,18 +1306,19 @@ html { color-scheme: light; }
 .hero-demo     { animation-delay: 440ms; animation-duration: 800ms; }
 
 /* ── Scroll-reveal pattern ─────────────────────────────────── */
+/* No will-change here — promoting every reveal element to its own GPU
+   layer was creating 20+ permanent compositor layers, which hurts scroll
+   FPS. The 600ms transition runs once and is cheap enough without it. */
 [data-reveal] {
   opacity: 0;
   transform: translate3d(0, 18px, 0);
   transition:
     opacity 600ms var(--ease-out-quint),
     transform 600ms var(--ease-out-quint);
-  will-change: opacity, transform;
 }
 [data-reveal="in"] {
   opacity: 1;
   transform: translate3d(0, 0, 0);
-  will-change: auto;
 }
 
 /* Stagger tiles in the mosaic so a row reveals as a wave */
@@ -1328,12 +1333,14 @@ html { color-scheme: light; }
 }
 
 /* ── Tile-stage micro-zoom on hover (matches the clickable tile) */
+/* No will-change at rest — promote on hover only, browsers handle the
+   compositor layer for the brief duration of the transform. */
 .tile-variant .tile-stage > * {
   transition: transform 360ms var(--ease-out-quint);
-  will-change: transform;
 }
 .tile-variant:hover .tile-stage > * {
   transform: scale(1.04);
+  will-change: transform;
 }
 .tile-variant:active .tile-stage > * {
   transform: scale(0.99);
