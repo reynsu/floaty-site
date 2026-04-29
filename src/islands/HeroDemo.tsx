@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { FloaterActionsProvider, useFloaterActions } from 'floaty';
+import { FloaterActionsProvider, useFloaterActions } from 'react-floaty';
 import { Code } from '../components/Code';
 
-const heroSnippet = `import { FloaterActionsProvider, useFloaterActions } from 'floaty';
-import 'floaty/styles.css';
+const heroSnippet = `import { FloaterActionsProvider, useFloaterActions } from 'react-floaty';
+import 'react-floaty/styles.css';
 
 function Page() {
   const { show } = useFloaterActions();

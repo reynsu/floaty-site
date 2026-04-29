@@ -6,7 +6,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from 'react';
-import { FloaterActionsProvider, useFloaterActions, type FloaterAction } from 'floaty';
+import { FloaterActionsProvider, useFloaterActions, type FloaterAction } from 'react-floaty';
 
 // ─── Inline icons (zero deps) ────────────────────────
 const Stroke = ({ d }: { d: string }) => (

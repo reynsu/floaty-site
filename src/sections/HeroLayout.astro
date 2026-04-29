@@ -22,7 +22,7 @@
 
       <div class="hero-cta">
         <span class="install-pill" id="install-pill" data-state="idle">
-          <span aria-hidden="true" class="install-pill-prompt">$</span> npm i floaty
+          <span aria-hidden="true" class="install-pill-prompt">$</span> npm i react-floaty
           <button
             type="button"
             class="copy-btn copy-btn-idle"
@@ -64,7 +64,7 @@
       if (span) span.textContent = glyph;
     };
     btn.addEventListener('click', () => {
-      navigator.clipboard.writeText('npm i floaty').then(
+      navigator.clipboard.writeText('npm i react-floaty').then(
         () => {
           setState('copied');
           window.setTimeout(() => setState('idle'), 1400);

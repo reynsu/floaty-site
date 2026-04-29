@@ -19,12 +19,12 @@ npm install
 npm run dev
 ```
 
-The site uses `floaty` from a sibling local directory (`file:../floater-actions`).
+The site uses `react-floaty` from a sibling local directory (`file:../floater-actions`).
 For deployment, switch the dependency to the published version:
 
 ```diff
-- "floaty": "file:../floater-actions",
-+ "floaty": "^0.1.0",
+- "react-floaty": "file:../floater-actions",
++ "react-floaty": "^0.1.0",
 ```
 
 ## Build
