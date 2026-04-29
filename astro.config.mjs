@@ -11,7 +11,7 @@ export default defineConfig({
   devToolbar: { enabled: false },
   build: { inlineStylesheets: 'auto' },
   vite: {
-    // floaty is a file: dependency rebuilt via tsup; keep its prebundle stable.
-    optimizeDeps: { include: ['floaty'] },
+    // react-floaty is a file: dependency rebuilt via tsup; keep its prebundle stable.
+    optimizeDeps: { include: ['react-floaty'] },
   },
 });
