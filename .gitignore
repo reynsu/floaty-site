@@ -8,3 +8,7 @@ coverage
 *.tsbuildinfo
 .playwright-mcp
 **/.playwright-mcp
+
+# Astro
+.astro/
+dist/

@@ -1,0 +1,20 @@
+---
+// Static section frame — spotlights, mosaic, dialog, footer copy all
+// live in the React island via <slot /> (one island so dialog state
+// is shared across tiles).
+---
+
+<section id="customize" aria-labelledby="customize-h">
+  <div class="page">
+    <div class="section-h" data-reveal="">
+      <div>
+        <span class="kicker">Customization</span>
+        <h2 id="customize-h">9 themes from one className.</h2>
+      </div>
+      <span class="section-h-meta">
+        Three featured variants below — including layouts that escape the row entirely.
+      </span>
+    </div>
+  </div>
+  <slot />
+</section>

@@ -1,0 +1,79 @@
+---
+// Static hero — kicker, headline, prose, install pill.
+// Live demo card is rendered as a React island via <slot />.
+---
+
+<section class="hero" id="top" aria-labelledby="hero-h">
+  <div class="page">
+    <div class="content">
+      <span class="kicker">v0.1.0 · public beta</span>
+
+      <h1 id="hero-h">
+        Floating actions<span class="slash">.</span>{' '}
+        <br />
+        For React<span class="slash">.</span>
+      </h1>
+
+      <p class="hero-prose">
+        A <b>React 18</b> component for the toolbar that slides up when something is
+        selected. Around <b>8 KB ESM</b> gzipped, with <b>zero runtime dependencies</b>,
+        {' '}<b>SSR-safe</b> rendering, and the <b>WAI-ARIA toolbar</b> pattern wired in.
+      </p>
+
+      <div class="hero-cta">
+        <span class="install-pill" id="install-pill" data-state="idle">
+          <span aria-hidden="true" class="install-pill-prompt">$</span> npm i floaty
+          <button
+            type="button"
+            class="copy-btn copy-btn-idle"
+            id="install-copy-btn"
+            aria-label="Copy"
+            data-default-label="Copy"
+          >
+            <span aria-hidden="true">⧉</span>
+          </button>
+        </span>
+      </div>
+    </div>
+
+    <div class="hero-demo">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<!-- Inline script for the install-pill copy button. Avoids shipping an extra
+     React island for ~30 lines of clipboard logic. -->
+<script is:inline>
+  (() => {
+    const pill = document.getElementById('install-pill');
+    const btn = document.getElementById('install-copy-btn');
+    if (!pill || !btn) return;
+    const setState = (state) => {
+      const glyph =
+        state === 'copied' ? '✓' : state === 'failed' ? '✗' : '⧉';
+      const label =
+        state === 'copied'
+          ? 'Copied'
+          : state === 'failed'
+            ? 'Copy failed'
+            : 'Copy';
+      btn.className = 'copy-btn copy-btn-' + state;
+      btn.setAttribute('aria-label', label);
+      const span = btn.querySelector('span');
+      if (span) span.textContent = glyph;
+    };
+    btn.addEventListener('click', () => {
+      navigator.clipboard.writeText('npm i floaty').then(
+        () => {
+          setState('copied');
+          window.setTimeout(() => setState('idle'), 1400);
+        },
+        () => {
+          setState('failed');
+          window.setTimeout(() => setState('idle'), 1800);
+        },
+      );
+    });
+  })();
+</script>

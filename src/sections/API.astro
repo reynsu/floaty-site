@@ -1,0 +1,73 @@
+---
+// Static API reference — direct port of API.tsx.
+const provider = [
+  { k: 'maxVisible', v: 'Visible buttons before overflow.', code: '3' },
+  { k: 'portalContainer', v: 'Portal target.', code: 'document.body' },
+  { k: 'className', v: 'Class on the bar — theming hook.', code: undefined },
+  { k: 'closeOnOutsideClick', v: 'Pointerdown outside dismisses.', code: 'true' },
+  { k: 'closeOnEscape', v: 'Escape dismisses.', code: 'true' },
+];
+
+const hook = [
+  { k: 'show(actions, opts?)', v: 'Open the bar with the given action list.' },
+  { k: 'hide()', v: 'Close (animation runs to completion).' },
+  { k: 'toggle(actions?)', v: 'Toggle. Reuses last actions if omitted.' },
+  { k: 'open', v: 'Boolean — current open state.' },
+  { k: 'actions', v: 'FloaterAction[] currently shown.' },
+];
+---
+
+<section id="api" aria-labelledby="api-h">
+  <div class="page">
+    <div class="section-h" data-reveal="">
+      <div>
+        <span class="kicker">API</span>
+        <h2 id="api-h">One Provider, one hook.</h2>
+      </div>
+      <span class="section-h-meta">5 props · 5 members · ~8 KB</span>
+    </div>
+
+    <div class="api-grid">
+      <div>
+        <h3 class="api-block-h">
+          <span>{'<FloaterActionsProvider />'}</span>
+          <span class="meta">component</span>
+        </h3>
+        <div class="api-table">
+          {
+            provider.map((p) => (
+              <div class="row">
+                <div class="key">{p.k}</div>
+                <div class="val">
+                  {p.v}
+                  {p.code && (
+                    <>
+                      {' '}Default <code>{p.code}</code>.
+                    </>
+                  )}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div>
+        <h3 class="api-block-h">
+          <span>useFloaterActions()</span>
+          <span class="meta">hook</span>
+        </h3>
+        <div class="api-table">
+          {
+            hook.map((h) => (
+              <div class="row">
+                <div class="key">{h.k}</div>
+                <div class="val">{h.v}</div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

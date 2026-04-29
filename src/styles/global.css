@@ -1559,3 +1559,23 @@ html { color-scheme: light; }
   }
   .css-dialog[open] { transform: none; }
 }
+
+/* ─── Skip-link (a11y: keyboard users jump past the topbar) ────── */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 12px;
+  z-index: 9999;
+  padding: 8px 14px;
+  background: var(--fg);
+  color: var(--bg);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: top 160ms var(--ease-out-quint, ease-out);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 12px;
+}

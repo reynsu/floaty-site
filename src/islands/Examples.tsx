@@ -17,7 +17,7 @@ type ExampleCardProps = {
 function ExampleCard({ no, name, desc, demo, code, hint }: ExampleCardProps) {
   const [tab, setTab] = useState<'demo' | 'code'>('demo');
   return (
-    <article className="example" data-reveal="">
+    <article className="example">
       <header className="example-head">
         <span className="example-no">{no}</span>
         <div>
@@ -214,8 +214,10 @@ function PaletteDemo() {
     return () => window.removeEventListener('keydown', handler);
   }, [toggle, actions]);
 
-  const isMac =
-    typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform);
+  const [isMac, setIsMac] = useState(false);
+  useEffect(() => {
+    setIsMac(/Mac|iPhone|iPad/.test(navigator.platform));
+  }, []);
 
   return (
     <div className="demo-center">
@@ -511,21 +513,11 @@ show([
 ]);`;
 
 // ──────────────────────────────────────────────────────────
-//  Layout
+//  Island root — outer <section> + section-h come from ExamplesLayout.astro
 // ──────────────────────────────────────────────────────────
-export function Examples() {
+export default function Examples() {
   return (
-    <section id="examples">
-      <div className="page">
-        <div className="section-h" data-reveal="">
-          <div>
-            <span className="kicker">Examples</span>
-            <h2>Seven real use cases.</h2>
-          </div>
-          <span className="section-h-meta">All examples run live on this page.</span>
-        </div>
-
-        <div className="examples">
+    <div className="examples">
           <FloaterActionsProvider maxVisible={3}>
             <ExampleCard
               no="01 / Basic"
@@ -597,8 +589,6 @@ export function Examples() {
               code={radialCode}
             />
           </FloaterActionsProvider>
-        </div>
-      </div>
-    </section>
+    </div>
   );
 }

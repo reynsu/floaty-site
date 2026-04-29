@@ -1,0 +1,16 @@
+---
+// Static section frame — the live cards are rendered as a React island via <slot />.
+---
+
+<section id="examples" aria-labelledby="examples-h">
+  <div class="page">
+    <div class="section-h" data-reveal="">
+      <div>
+        <span class="kicker">Examples</span>
+        <h2 id="examples-h">Seven real use cases.</h2>
+      </div>
+      <span class="section-h-meta">All examples run live on this page.</span>
+    </div>
+    <slot />
+  </div>
+</section>
