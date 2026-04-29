@@ -60,18 +60,32 @@ function HeroDemoStage() {
 }
 
 function CopyableInstall() {
-  const [copied, setCopied] = useState(false);
+  const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle');
   const onCopy = () => {
-    navigator.clipboard.writeText('npm i floaty').then(() => {
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1400);
-    });
+    navigator.clipboard.writeText('npm i floaty').then(
+      () => {
+        setState('copied');
+        window.setTimeout(() => setState('idle'), 1400);
+      },
+      () => {
+        setState('failed');
+        window.setTimeout(() => setState('idle'), 1800);
+      },
+    );
   };
+  const glyph = state === 'copied' ? '✓' : state === 'failed' ? '✗' : '⧉';
+  const label =
+    state === 'copied' ? 'Copied' : state === 'failed' ? 'Copy failed' : 'Copy';
   return (
     <span className="install-pill">
-      <span style={{ opacity: 0.5 }}>$</span> npm i floaty
-      <button type="button" className="copy-btn" onClick={onCopy} aria-label="Copy">
-        {copied ? '✓' : '⧉'}
+      <span aria-hidden="true" className="install-pill-prompt">$</span> npm i floaty
+      <button
+        type="button"
+        className={`copy-btn copy-btn-${state}`}
+        onClick={onCopy}
+        aria-label={label}
+      >
+        <span aria-hidden="true">{glyph}</span>
       </button>
     </span>
   );

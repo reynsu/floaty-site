@@ -229,6 +229,9 @@ section + section { border-top: 1px solid var(--line); }
   transition: background 120ms;
 }
 .install-pill .copy-btn:hover { background: oklch(40% 0.018 270); }
+.install-pill .copy-btn-copied { color: oklch(80% 0.16 140); }
+.install-pill .copy-btn-failed { color: oklch(80% 0.18 28); }
+.install-pill-prompt { opacity: 0.5; }
 
 /* Buttons */
 .btn {
@@ -412,7 +415,8 @@ section + section { border-top: 1px solid var(--line); }
 .code .tok-tag  { color: oklch(80% 0.13 50); }
 .code .tok-prop { color: oklch(80% 0.10 240); }
 
-.code-actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 6px; }
+.code-block { position: relative; }
+.code-actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 6px; z-index: 1; }
 .code-copy {
   display: inline-flex; align-items: center; gap: 6px;
   height: 26px; padding: 0 10px;
@@ -422,10 +426,11 @@ section + section { border-top: 1px solid var(--line); }
   font-family: var(--mono);
   font-size: 11px;
   border: 1px solid oklch(28% 0.018 270);
-  transition: background 120ms;
+  transition: background 120ms, color 120ms;
 }
 .code-copy:hover { background: oklch(28% 0.018 270); }
-.code-copy.copied { color: oklch(80% 0.16 140); }
+.code-copy-copied { color: oklch(80% 0.16 140); }
+.code-copy-failed { color: oklch(72% 0.18 28); border-color: oklch(45% 0.16 28); }
 
 /* ─── Demo content ────────────────────────────────────────── */
 .demo-trigger {

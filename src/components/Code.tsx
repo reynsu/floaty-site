@@ -6,29 +6,40 @@ type Props = {
   className?: string;
 };
 
+type CopyState = 'idle' | 'copied' | 'failed';
+
 export function Code({ code, className }: Props) {
-  const [copied, setCopied] = useState(false);
+  const [state, setState] = useState<CopyState>('idle');
 
   const onCopy = () => {
-    navigator.clipboard.writeText(code).then(() => {
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1400);
-    });
+    navigator.clipboard.writeText(code).then(
+      () => {
+        setState('copied');
+        window.setTimeout(() => setState('idle'), 1400);
+      },
+      () => {
+        setState('failed');
+        window.setTimeout(() => setState('idle'), 1800);
+      },
+    );
   };
 
+  const label =
+    state === 'copied' ? '✓ copied' : state === 'failed' ? '✗ failed' : 'copy';
+
   return (
-    <pre className={`code ${className ?? ''}`}>
+    <div className={`code-block ${className ?? ''}`}>
       <div className="code-actions">
         <button
           type="button"
-          className={`code-copy ${copied ? 'copied' : ''}`}
+          className={`code-copy code-copy-${state}`}
           onClick={onCopy}
           aria-label="Copy code"
         >
-          {copied ? '✓ copied' : 'copy'}
+          {label}
         </button>
       </div>
-      {highlight(code)}
-    </pre>
+      <pre className="code">{highlight(code)}</pre>
+    </div>
   );
 }
