@@ -579,6 +579,12 @@ section + section { border-top: 1px solid var(--line); }
 .band-discord    { --band-bg: oklch(94% 0.04 270); }
 .band-terminal   { --band-bg: oklch(13% 0.04 140); --band-fg: oklch(85% 0.18 140); }
 .band-lime       { --band-bg: oklch(94% 0.06 110); }
+.band-neon       { --band-bg: linear-gradient(135deg, oklch(18% 0.05 290), oklch(22% 0.06 320)); }
+.band-candy      { --band-bg: linear-gradient(135deg, oklch(92% 0.10 25), oklch(94% 0.06 60)); }
+.band-ocean      { --band-bg: linear-gradient(180deg, oklch(96% 0.04 250), oklch(94% 0.05 240)); }
+.band-yellow     { --band-bg: oklch(95% 0.10 95); }
+.band-lavender   { --band-bg: linear-gradient(135deg, oklch(94% 0.05 280), oklch(96% 0.04 300)); }
+.band-sunset     { --band-bg: linear-gradient(135deg, oklch(94% 0.08 30), oklch(94% 0.08 340)); }
 
 /* ── Spotlight (featured) ───────────────────────────────── */
 .spotlight {

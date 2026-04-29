@@ -1,5 +1,5 @@
 /* ──────────────────────────────────────────────────────────────
-   FLOATY — 12 customization variants.
+   FLOATY — customization variants.
    Each maps to:
      1. A class on the actual `.fa-bar` (real floating bar)
      2. CSS custom properties on `.fa-mini` for the preview chip
@@ -81,12 +81,12 @@
   --fa-border: transparent;
   --fa-radius: 999px;
   --fa-radius-inner: 999px;
+  --fa-padding: 6px;
   --fa-action-bg: transparent;
   --fa-action-bg-hover: oklch(28% 0.02 270);
   --fa-action-bg-active: oklch(35% 0.02 270);
   --fa-shadow: 0 12px 32px oklch(15% 0.018 270 / 0.35);
   --fa-danger: oklch(72% 0.18 28);
-  padding: 6px;
 }
 .fa-mini.theme-pill {
   --mini-bg: oklch(15% 0.018 270);
@@ -105,12 +105,12 @@
   --fa-border: oklch(13% 0 0);
   --fa-radius: 0;
   --fa-radius-inner: 0;
+  --fa-border-w: 2px;
   --fa-action-bg: transparent;
   --fa-action-bg-hover: oklch(13% 0 0);
   --fa-action-bg-active: oklch(13% 0 0);
   --fa-shadow: 5px 5px 0 oklch(13% 0 0);
   --fa-danger: oklch(55% 0.22 28);
-  border: 2px solid oklch(13% 0 0);
   font-family: 'JetBrains Mono', monospace;
 }
 .theme-brutalist.fa-bar .fa-action:hover,
@@ -142,7 +142,6 @@
   font-family: 'JetBrains Mono', monospace;
   text-transform: lowercase;
   letter-spacing: 0.04em;
-  border: 1px solid oklch(45% 0.10 140);
 }
 .fa-mini.theme-terminal {
   --mini-bg: oklch(13% 0.04 140);
@@ -182,7 +181,7 @@
 
 /* ── 08 / STRIPE ──────────────────────────────────────────── */
 .theme-stripe.fa-bar {
-  --fa-bg: linear-gradient(180deg, oklch(99% 0.003 240), oklch(96% 0.015 240));
+  background: linear-gradient(180deg, oklch(99% 0.003 240), oklch(96% 0.015 240));
   --fa-fg: oklch(20% 0.05 240);
   --fa-border: oklch(85% 0.04 240);
   --fa-radius: 10px;
@@ -192,7 +191,6 @@
   --fa-action-bg-active: oklch(92% 0.04 240);
   --fa-shadow: 0 1px 2px oklch(50% 0.10 240 / 0.06), 0 8px 24px oklch(50% 0.10 240 / 0.12);
   --fa-danger: oklch(58% 0.22 28);
-  background: linear-gradient(180deg, oklch(99% 0.003 240), oklch(96% 0.015 240));
 }
 .fa-mini.theme-stripe {
   --mini-bg: linear-gradient(180deg, oklch(99% 0.003 240), oklch(96% 0.015 240));
@@ -238,7 +236,7 @@
   --fa-action-bg-active: oklch(52% 0.14 270);
   --fa-shadow: 0 12px 32px oklch(38% 0.10 270 / 0.4);
   --fa-danger: oklch(72% 0.18 28);
-  font-weight: 600;
+  --fa-action-fw: 600;
 }
 .fa-mini.theme-discord {
   --mini-bg: oklch(38% 0.10 270);
@@ -248,7 +246,7 @@
   --mini-radius-inner: 7px;
   --mini-shadow: 0 8px 20px oklch(38% 0.10 270 / 0.4);
 }
-.fa-mini.theme-discord button { font-weight: 600; }
+.fa-mini.theme-discord .fa-mini-action { font-weight: 600; }
 
 /* ── 11 / PASTEL ──────────────────────────────────────────── */
 .theme-pastel.fa-bar {
@@ -284,7 +282,7 @@
   --fa-action-bg-active: oklch(66% 0.20 110);
   --fa-shadow: 0 12px 32px oklch(78% 0.20 110 / 0.5), 0 0 0 1px oklch(60% 0.18 110);
   --fa-danger: oklch(28% 0.20 28);
-  font-weight: 700;
+  --fa-action-fw: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   font-size: 12px;
@@ -297,9 +295,455 @@
   --mini-radius-inner: 3px;
   --mini-shadow: 0 8px 20px oklch(78% 0.20 110 / 0.4);
 }
-.fa-mini.theme-acid button {
+.fa-mini.theme-acid .fa-mini-action {
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   font-size: 9px;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   New variants — 13 → 24
+   ──────────────────────────────────────────────────────────── */
+
+/* ── 13 / DOCK · floating compact icon row ─────────────────── */
+.theme-dock.fa-bar {
+  --fa-bg: oklch(15% 0.018 270 / 0.78);
+  --fa-fg: oklch(96% 0.005 80);
+  --fa-border: oklch(96% 0.005 80 / 0.12);
+  --fa-radius: 22px;
+  --fa-radius-inner: 14px;
+  --fa-padding: 8px;
+  --fa-gap: 4px;
+  --fa-action-px: 14px;
+  --fa-action-h: 38px;
+  --fa-action-flex: 0 0 auto;
+  --fa-width: auto;
+  --fa-action-bg: oklch(96% 0.005 80 / 0.06);
+  --fa-action-bg-hover: oklch(96% 0.005 80 / 0.16);
+  --fa-shadow: 0 18px 40px oklch(15% 0.018 270 / 0.5), inset 0 0.5px 0 oklch(96% 0.005 80 / 0.12);
+  --fa-danger: oklch(72% 0.18 28);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+}
+.fa-mini.theme-dock {
+  --mini-bg: oklch(15% 0.018 270 / 0.78);
+  --mini-fg: oklch(96% 0.005 80);
+  --mini-border: 1px solid oklch(96% 0.005 80 / 0.12);
+  --mini-radius: 18px;
+  --mini-radius-inner: 11px;
+  --mini-shadow: 0 10px 24px oklch(15% 0.018 270 / 0.5);
+  --mini-action-bg: oklch(96% 0.005 80 / 0.06);
+  padding: 6px;
+  gap: 3px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ── 14 / NEON · synthwave glow on dark ────────────────────── */
+.theme-neon.fa-bar {
+  --fa-bg: oklch(14% 0.04 290);
+  --fa-fg: oklch(94% 0.10 320);
+  --fa-border: oklch(70% 0.25 320);
+  --fa-radius: 6px;
+  --fa-radius-inner: 4px;
+  --fa-border-w: 1px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(70% 0.25 320 / 0.18);
+  --fa-action-bg-active: oklch(70% 0.25 320 / 0.28);
+  --fa-shadow:
+    0 0 0 1px oklch(70% 0.25 320 / 0.55),
+    0 0 24px oklch(70% 0.25 320 / 0.45),
+    0 0 60px oklch(70% 0.25 320 / 0.35),
+    inset 0 0 18px oklch(70% 0.25 320 / 0.12);
+  --fa-danger: oklch(78% 0.22 28);
+  --fa-action-fw: 600;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+.fa-mini.theme-neon {
+  --mini-bg: oklch(14% 0.04 290);
+  --mini-fg: oklch(94% 0.10 320);
+  --mini-border: 1px solid oklch(70% 0.25 320);
+  --mini-radius: 5px;
+  --mini-radius-inner: 3px;
+  --mini-shadow:
+    0 0 18px oklch(70% 0.25 320 / 0.5),
+    0 0 40px oklch(70% 0.25 320 / 0.3);
+  --mini-font: 'JetBrains Mono', monospace;
+}
+.fa-mini.theme-neon .fa-mini-action {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 9px;
+}
+
+/* ── 15 / OUTLINE · transparent body, ink stroke ──────────── */
+.theme-outline.fa-bar {
+  --fa-bg: transparent;
+  --fa-fg: oklch(15% 0.018 270);
+  --fa-border: oklch(15% 0.018 270);
+  --fa-border-w: 1.5px;
+  --fa-radius: 999px;
+  --fa-radius-inner: 999px;
+  --fa-padding: 4px;
+  --fa-gap: 4px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(15% 0.018 270);
+  --fa-action-bg-active: oklch(20% 0.018 270);
+  --fa-shadow: none;
+  --fa-danger: oklch(55% 0.22 28);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.theme-outline.fa-bar .fa-action:hover,
+.theme-outline.fa-bar .fa-more:hover {
+  color: oklch(98% 0.003 80);
+}
+.fa-mini.theme-outline {
+  --mini-bg: transparent;
+  --mini-fg: oklch(15% 0.018 270);
+  --mini-border: 1.5px solid oklch(15% 0.018 270);
+  --mini-radius: 999px;
+  --mini-radius-inner: 999px;
+  --mini-shadow: none;
+  padding: 3px;
+}
+
+/* ── 16 / TAPE · masking-tape, slight rotation ─────────────── */
+.theme-tape.fa-bar {
+  --fa-bg: oklch(94% 0.06 80);
+  --fa-fg: oklch(20% 0.04 60);
+  --fa-border: oklch(20% 0.04 60);
+  --fa-border-w: 1px;
+  --fa-border-style: dashed;
+  --fa-radius: 0;
+  --fa-radius-inner: 0;
+  --fa-padding: 8px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(88% 0.08 80);
+  --fa-action-bg-active: oklch(82% 0.10 80);
+  --fa-shadow: 4px 6px 0 oklch(20% 0.04 60 / 0.18);
+  --fa-danger: oklch(55% 0.22 28);
+  --fa-action-fw: 600;
+}
+.theme-tape.fa-bar[data-state='open'] {
+  transform: translate(-50%, 0) rotate(-1.2deg);
+}
+.fa-mini.theme-tape {
+  --mini-bg: oklch(94% 0.06 80);
+  --mini-fg: oklch(20% 0.04 60);
+  --mini-border: 1px dashed oklch(20% 0.04 60);
+  --mini-radius: 0;
+  --mini-radius-inner: 0;
+  --mini-shadow: 4px 5px 0 oklch(20% 0.04 60 / 0.18);
+  transform: rotate(-1.5deg);
+}
+.fa-mini.theme-tape .fa-mini-action { font-weight: 600; }
+
+/* ── 17 / GAME · candy-bright with hard offset shadow ──────── */
+.theme-game.fa-bar {
+  --fa-bg: oklch(75% 0.20 25);
+  --fa-fg: oklch(20% 0.05 25);
+  --fa-border: oklch(20% 0.05 25);
+  --fa-border-w: 3px;
+  --fa-radius: 14px;
+  --fa-radius-inner: 8px;
+  --fa-padding: 5px;
+  --fa-gap: 5px;
+  --fa-action-bg: oklch(85% 0.16 25);
+  --fa-action-bg-hover: oklch(80% 0.18 25);
+  --fa-action-bg-active: oklch(72% 0.20 25);
+  --fa-shadow: 6px 6px 0 oklch(20% 0.05 25);
+  --fa-danger: oklch(35% 0.20 280);
+  --fa-action-fw: 700;
+  font-size: 13px;
+}
+.fa-mini.theme-game {
+  --mini-bg: oklch(75% 0.20 25);
+  --mini-fg: oklch(20% 0.05 25);
+  --mini-border: 2px solid oklch(20% 0.05 25);
+  --mini-radius: 11px;
+  --mini-radius-inner: 7px;
+  --mini-shadow: 4px 4px 0 oklch(20% 0.05 25);
+  --mini-action-bg: oklch(85% 0.16 25);
+}
+.fa-mini.theme-game .fa-mini-action { font-weight: 700; }
+
+/* ── 18 / GRADIENT · multi-color sunset ────────────────────── */
+.theme-gradient.fa-bar {
+  background: linear-gradient(135deg,
+    oklch(72% 0.20 30) 0%,
+    oklch(65% 0.22 340) 50%,
+    oklch(60% 0.20 280) 100%
+  );
+  --fa-fg: oklch(98% 0.003 80);
+  --fa-border: oklch(98% 0.003 80 / 0.18);
+  --fa-radius: 16px;
+  --fa-radius-inner: 10px;
+  --fa-action-bg: oklch(98% 0.003 80 / 0.10);
+  --fa-action-bg-hover: oklch(98% 0.003 80 / 0.20);
+  --fa-action-bg-active: oklch(98% 0.003 80 / 0.30);
+  --fa-shadow: 0 16px 40px oklch(60% 0.20 280 / 0.45);
+  --fa-danger: oklch(94% 0.10 30);
+  --fa-action-fw: 600;
+}
+.fa-mini.theme-gradient {
+  --mini-bg: linear-gradient(135deg, oklch(72% 0.20 30), oklch(65% 0.22 340), oklch(60% 0.20 280));
+  --mini-fg: oklch(98% 0.003 80);
+  --mini-border: 1px solid oklch(98% 0.003 80 / 0.18);
+  --mini-radius: 12px;
+  --mini-radius-inner: 8px;
+  --mini-shadow: 0 8px 20px oklch(60% 0.20 280 / 0.45);
+  --mini-action-bg: oklch(98% 0.003 80 / 0.10);
+  background: linear-gradient(135deg, oklch(72% 0.20 30), oklch(65% 0.22 340), oklch(60% 0.20 280));
+}
+.fa-mini.theme-gradient .fa-mini-action { font-weight: 600; }
+
+/* ── 19 / MATERIAL · M3 elevated chip ─────────────────────── */
+.theme-material.fa-bar {
+  --fa-bg: oklch(96% 0.05 250);
+  --fa-fg: oklch(28% 0.10 250);
+  --fa-border: transparent;
+  --fa-border-w: 0;
+  --fa-radius: 28px;
+  --fa-radius-inner: 20px;
+  --fa-padding: 4px;
+  --fa-gap: 0;
+  --fa-action-px: 18px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(86% 0.10 250);
+  --fa-action-bg-active: oklch(78% 0.13 250);
+  --fa-shadow:
+    0 1px 3px oklch(15% 0.05 250 / 0.12),
+    0 2px 8px oklch(15% 0.05 250 / 0.08),
+    0 12px 28px oklch(28% 0.10 250 / 0.18);
+  --fa-danger: oklch(45% 0.22 28);
+  --fa-action-fw: 500;
+}
+.fa-mini.theme-material {
+  --mini-bg: oklch(96% 0.05 250);
+  --mini-fg: oklch(28% 0.10 250);
+  --mini-border: 0;
+  --mini-radius: 22px;
+  --mini-radius-inner: 16px;
+  --mini-shadow: 0 6px 20px oklch(28% 0.10 250 / 0.18);
+  padding: 3px;
+  gap: 0;
+}
+
+/* ── 20 / RECEIPT · serif, dashed bottom, monochrome ──────── */
+.theme-receipt.fa-bar {
+  --fa-bg: oklch(98% 0.005 80);
+  --fa-fg: oklch(15% 0.005 80);
+  --fa-border: oklch(15% 0.005 80);
+  --fa-radius: 0;
+  --fa-radius-inner: 0;
+  --fa-border-w: 0;
+  --fa-padding: 14px 12px 10px;
+  --fa-gap: 0;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(15% 0.005 80);
+  --fa-action-bg-active: oklch(20% 0.005 80);
+  --fa-shadow:
+    0 -1px 0 oklch(15% 0.005 80) inset,
+    0 12px 24px oklch(15% 0.005 80 / 0.18);
+  --fa-danger: oklch(45% 0.22 28);
+  font-family: 'Georgia', 'Iowan Old Style', serif;
+  font-style: italic;
+  border-bottom: 2px dashed oklch(15% 0.005 80);
+}
+.theme-receipt.fa-bar .fa-action:hover,
+.theme-receipt.fa-bar .fa-more:hover {
+  color: oklch(98% 0.005 80);
+  font-style: normal;
+}
+.fa-mini.theme-receipt {
+  --mini-bg: oklch(98% 0.005 80);
+  --mini-fg: oklch(15% 0.005 80);
+  --mini-border: 0;
+  --mini-radius: 0;
+  --mini-radius-inner: 0;
+  --mini-shadow: 0 8px 18px oklch(15% 0.005 80 / 0.18);
+  --mini-font: 'Georgia', serif;
+  border-bottom: 2px dashed oklch(15% 0.005 80);
+  padding: 8px 8px 6px;
+}
+.fa-mini.theme-receipt .fa-mini-action { font-style: italic; }
+
+/* ── 21 / STICKY NOTE · yellow, rotated, drawn shadow ──────── */
+.theme-sticky.fa-bar {
+  --fa-bg: oklch(94% 0.13 95);
+  --fa-fg: oklch(22% 0.06 95);
+  --fa-border: transparent;
+  --fa-radius: 2px;
+  --fa-radius-inner: 1px;
+  --fa-padding: 10px;
+  --fa-gap: 6px;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(88% 0.16 95);
+  --fa-action-bg-active: oklch(82% 0.18 95);
+  --fa-shadow:
+    0 2px 0 oklch(85% 0.16 95),
+    8px 14px 18px oklch(22% 0.06 95 / 0.32),
+    -2px 4px 8px oklch(22% 0.06 95 / 0.18);
+  --fa-danger: oklch(45% 0.22 28);
+  --fa-action-fw: 600;
+  font-family: 'Caveat', 'Bradley Hand', 'Comic Sans MS', cursive;
+  font-size: 17px;
+  letter-spacing: 0.005em;
+}
+.theme-sticky.fa-bar[data-state='open'] {
+  transform: translate(-50%, 0) rotate(2deg);
+}
+.fa-mini.theme-sticky {
+  --mini-bg: oklch(94% 0.13 95);
+  --mini-fg: oklch(22% 0.06 95);
+  --mini-border: 0;
+  --mini-radius: 2px;
+  --mini-radius-inner: 1px;
+  --mini-shadow:
+    0 1px 0 oklch(85% 0.16 95),
+    5px 10px 14px oklch(22% 0.06 95 / 0.32);
+  --mini-font: 'Caveat', cursive;
+  padding: 8px;
+  transform: rotate(2deg);
+}
+.fa-mini.theme-sticky .fa-mini-action {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* ── 22 / PIXEL · 8-bit chunky borders ────────────────────── */
+.theme-pixel.fa-bar {
+  --fa-bg: oklch(95% 0.005 80);
+  --fa-fg: oklch(15% 0.018 270);
+  --fa-border: transparent;
+  --fa-border-w: 0;
+  --fa-radius: 0;
+  --fa-radius-inner: 0;
+  --fa-padding: 4px;
+  --fa-gap: 4px;
+  --fa-action-bg: oklch(85% 0.05 270);
+  --fa-action-bg-hover: oklch(78% 0.08 270);
+  --fa-action-bg-active: oklch(70% 0.12 270);
+  --fa-shadow:
+    0 0 0 4px oklch(15% 0.018 270),
+    4px 4px 0 4px oklch(78% 0.08 270),
+    8px 8px 0 4px oklch(15% 0.018 270);
+  --fa-danger: oklch(58% 0.22 28);
+  --fa-action-fw: 700;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+  image-rendering: pixelated;
+}
+.fa-mini.theme-pixel {
+  --mini-bg: oklch(95% 0.005 80);
+  --mini-fg: oklch(15% 0.018 270);
+  --mini-border: 0;
+  --mini-radius: 0;
+  --mini-radius-inner: 0;
+  --mini-shadow:
+    0 0 0 3px oklch(15% 0.018 270),
+    3px 3px 0 3px oklch(78% 0.08 270),
+    6px 6px 0 3px oklch(15% 0.018 270);
+  --mini-font: 'Courier New', monospace;
+  --mini-action-bg: oklch(85% 0.05 270);
+  padding: 3px;
+  gap: 3px;
+}
+.fa-mini.theme-pixel .fa-mini-action {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 9px;
+}
+
+/* ── 23 / CIRCLE · each action a perfect circle ───────────── */
+.theme-circle.fa-bar {
+  --fa-bg: oklch(98% 0.005 80);
+  --fa-fg: oklch(15% 0.018 270);
+  --fa-border: oklch(91% 0.005 270);
+  --fa-radius: 999px;
+  --fa-radius-inner: 999px;
+  --fa-padding: 6px;
+  --fa-gap: 6px;
+  --fa-action-h: 44px;
+  --fa-action-px: 0;
+  --fa-action-py: 0;
+  --fa-action-flex: 0 0 44px;
+  --fa-width: auto;
+  --fa-action-bg: oklch(94% 0.005 270);
+  --fa-action-bg-hover: oklch(88% 0.005 270);
+  --fa-action-bg-active: oklch(80% 0.005 270);
+  --fa-shadow: 0 12px 32px oklch(15% 0.018 270 / 0.12), 0 1px 2px oklch(15% 0.018 270 / 0.08);
+  --fa-danger: oklch(58% 0.22 28);
+  font-size: 11px;
+}
+.theme-circle.fa-bar .fa-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.fa-mini.theme-circle {
+  --mini-bg: oklch(98% 0.005 80);
+  --mini-fg: oklch(15% 0.018 270);
+  --mini-border: 1px solid oklch(91% 0.005 270);
+  --mini-radius: 999px;
+  --mini-radius-inner: 999px;
+  --mini-shadow: 0 8px 20px oklch(15% 0.018 270 / 0.12);
+  --mini-action-bg: oklch(94% 0.005 270);
+  padding: 5px;
+  gap: 5px;
+}
+.fa-mini.theme-circle .fa-mini-action {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* ── 24 / TOAST · narrow + at the top, not the bottom ─────── */
+.theme-toast.fa-bar {
+  --fa-bg: oklch(20% 0.018 270);
+  --fa-fg: oklch(96% 0.005 80);
+  --fa-border: oklch(96% 0.005 80 / 0.10);
+  --fa-radius: 999px;
+  --fa-radius-inner: 999px;
+  --fa-padding: 4px;
+  --fa-gap: 2px;
+  --fa-width: auto;
+  --fa-action-h: 36px;
+  --fa-action-px: 14px;
+  --fa-action-flex: 0 0 auto;
+  --fa-action-bg: transparent;
+  --fa-action-bg-hover: oklch(96% 0.005 80 / 0.10);
+  --fa-action-bg-active: oklch(96% 0.005 80 / 0.18);
+  --fa-shadow: 0 18px 40px oklch(15% 0.018 270 / 0.45);
+  --fa-danger: oklch(72% 0.18 28);
+  --fa-action-fw: 500;
+  font-size: 13px;
+  bottom: auto;
+  top: calc(env(safe-area-inset-top, 0px) + 16px);
+}
+.theme-toast.fa-bar[data-state='closed'] {
+  transform: translate(-50%, -180%);
+}
+.fa-mini.theme-toast {
+  --mini-bg: oklch(20% 0.018 270);
+  --mini-fg: oklch(96% 0.005 80);
+  --mini-border: 1px solid oklch(96% 0.005 80 / 0.10);
+  --mini-radius: 999px;
+  --mini-radius-inner: 999px;
+  --mini-shadow: 0 10px 24px oklch(15% 0.018 270 / 0.4);
+  padding: 3px;
+  gap: 2px;
 }
