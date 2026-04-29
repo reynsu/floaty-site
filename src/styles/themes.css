@@ -747,3 +747,325 @@
   padding: 3px;
   gap: 2px;
 }
+
+/* ============================================================
+ * theme-radial — donut/ring layout
+ * Buttons distributed around a circle using --fa-i / --fa-n.
+ * The bar becomes a square positioning canvas with no visible
+ * background; only the buttons render.
+ * ============================================================ */
+.theme-radial.fa-bar {
+  --fa-radius-px: 90px;        /* distance from center to button */
+  --fa-canvas: 220px;          /* outer canvas size */
+  --fa-action-h: 56px;
+  --fa-action-px: 0;
+  --fa-action-py: 0;
+  --fa-action-flex: 0 0 56px;
+  --fa-radius: 999px;
+  --fa-radius-inner: 999px;
+  --fa-bg: transparent;
+  --fa-border: transparent;
+  --fa-shadow: none;
+  --fa-padding: 0;
+  --fa-gap: 0;
+  --fa-action-bg: oklch(98% 0.005 80);
+  --fa-action-bg-hover: oklch(94% 0.005 270);
+  --fa-action-bg-active: oklch(88% 0.005 270);
+  --fa-fg: oklch(15% 0.018 270);
+  --fa-danger: oklch(58% 0.22 28);
+
+  /* Use the new structural knobs — escape the default flex row */
+  --fa-display: block;
+  --fa-width: var(--fa-canvas);
+  --fa-height: var(--fa-canvas);
+  border: none;
+
+  transform-origin: center bottom;
+  font-size: 11px;
+}
+.theme-radial.fa-bar::before {
+  /* outer ring guideline — pure decoration */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px dashed oklch(80% 0.005 270 / 0.5);
+  pointer-events: none;
+}
+.theme-radial.fa-bar::after {
+  /* inner hole guideline */
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  margin: -40px 0 0 -40px;
+  border-radius: 50%;
+  border: 1px dashed oklch(80% 0.005 270 / 0.5);
+  pointer-events: none;
+}
+.theme-radial.fa-bar .fa-action,
+.theme-radial.fa-bar .fa-more {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--fa-action-h);
+  height: var(--fa-action-h);
+  padding: 0;
+  border-radius: 50%;
+  background: var(--fa-action-bg);
+  border: 1px solid oklch(91% 0.005 270);
+  box-shadow: 0 6px 16px oklch(15% 0.018 270 / 0.12);
+  flex: 0 0 auto;
+  transform:
+    translate(-50%, -50%)
+    rotate(calc(var(--fa-i) * 360deg / var(--fa-n)))
+    translateY(calc(-1 * var(--fa-radius-px)))
+    rotate(calc(-1 * var(--fa-i) * 360deg / var(--fa-n)));
+  /* Phase 3 — staggered entrance */
+  opacity: 1;
+  transition:
+    background-color 120ms ease,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms ease;
+  transition-delay: calc(var(--fa-i) * 35ms);
+}
+.theme-radial.fa-bar[data-state='closed'] {
+  transform: translate(-50%, 0) scale(0.6);
+  opacity: 0;
+  transition: transform 180ms ease-in, opacity 180ms ease-in;
+}
+.theme-radial.fa-bar[data-state='closed'] .fa-action,
+.theme-radial.fa-bar[data-state='closed'] .fa-more {
+  opacity: 0;
+  transform:
+    translate(-50%, -50%)
+    rotate(calc(var(--fa-i) * 360deg / var(--fa-n)))
+    translateY(0)
+    rotate(calc(-1 * var(--fa-i) * 360deg / var(--fa-n)));
+  transition-delay: 0ms;
+}
+.theme-radial.fa-bar .fa-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.theme-radial.fa-bar .fa-action[data-variant='danger'] {
+  color: var(--fa-danger);
+}
+.fa-mini.theme-radial {
+  /* Mini preview tile: shrink the canvas + radius so it fits the card */
+  --mini-bg: transparent;
+  --mini-border: none;
+  --mini-shadow: none;
+  position: relative;
+  width: 130px;
+  height: 130px;
+  padding: 0;
+  gap: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+.fa-mini.theme-radial::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px dashed oklch(80% 0.005 270 / 0.5);
+}
+.fa-mini.theme-radial::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  margin: -25px 0 0 -25px;
+  border-radius: 50%;
+  border: 1px dashed oklch(80% 0.005 270 / 0.5);
+}
+.fa-mini.theme-radial .fa-mini-action {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  background: oklch(98% 0.005 80);
+  border: 1px solid oklch(91% 0.005 270);
+  box-shadow: 0 4px 10px oklch(15% 0.018 270 / 0.12);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transform:
+    translate(-50%, -50%)
+    rotate(calc(var(--mini-i, 0) * 360deg / var(--mini-n, 5)))
+    translateY(-50px)
+    rotate(calc(-1 * var(--mini-i, 0) * 360deg / var(--mini-n, 5)));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-radial.fa-bar .fa-action,
+  .theme-radial.fa-bar .fa-more {
+    transition-delay: 0ms;
+  }
+}
+
+/* ============================================================
+ * theme-arc — half-moon fan
+ * Same primitives as theme-radial, but spreads buttons across
+ * 180° (instead of 360°) on the upper half-circle. The whole
+ * shape is the canvas; the bar itself is invisible.
+ * ============================================================ */
+.theme-arc.fa-bar {
+  --fa-radius-px: 110px;
+  --fa-canvas-w: 280px;
+  --fa-canvas-h: 150px;
+  --fa-action-h: 48px;
+  --fa-action-px: 0;
+  --fa-action-py: 0;
+  --fa-action-flex: 0 0 48px;
+  --fa-radius: 999px;
+  --fa-radius-inner: 999px;
+  --fa-bg: transparent;
+  --fa-border: transparent;
+  --fa-shadow: none;
+  --fa-padding: 0;
+  --fa-gap: 0;
+  --fa-display: block;
+  --fa-width: var(--fa-canvas-w);
+  --fa-height: var(--fa-canvas-h);
+  --fa-action-bg: oklch(20% 0.018 270);
+  --fa-action-bg-hover: oklch(28% 0.04 270);
+  --fa-action-bg-active: oklch(36% 0.06 270);
+  --fa-fg: oklch(96% 0.005 80);
+  --fa-danger: oklch(72% 0.18 28);
+  font-size: 11px;
+}
+.theme-arc.fa-bar::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: calc(var(--fa-radius-px) * 2 + 12px);
+  height: calc(var(--fa-radius-px) * 2 + 12px);
+  margin-left: calc(-1 * (var(--fa-radius-px) + 6px));
+  border-radius: 50%;
+  border: 1px dashed oklch(72% 0.005 270 / 0.45);
+  pointer-events: none;
+  clip-path: inset(0 0 50% 0);    /* keep only the upper half */
+}
+.theme-arc.fa-bar .fa-action,
+.theme-arc.fa-bar .fa-more {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: var(--fa-action-h);
+  height: var(--fa-action-h);
+  padding: 0;
+  border-radius: 50%;
+  background: var(--fa-action-bg);
+  color: var(--fa-fg);
+  border: 1px solid oklch(40% 0.018 270);
+  box-shadow:
+    0 8px 22px oklch(15% 0.018 270 / 0.45),
+    inset 0 1px 0 oklch(96% 0.005 80 / 0.06);
+  flex: 0 0 auto;
+  /* spread across 180° (-90°..+90°) using --fa-i / --fa-n */
+  transform:
+    translate(-50%, 50%)
+    rotate(calc(-90deg + var(--fa-i) * 180deg / max(1, calc(var(--fa-n) - 1))))
+    translateY(calc(-1 * var(--fa-radius-px)))
+    rotate(calc(90deg - var(--fa-i) * 180deg / max(1, calc(var(--fa-n) - 1))));
+  opacity: 1;
+  transition:
+    background-color 120ms ease,
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 220ms ease;
+  transition-delay: calc(var(--fa-i) * 30ms);
+}
+.theme-arc.fa-bar[data-state='closed'] {
+  transform: translate(-50%, 0) scale(0.7);
+  opacity: 0;
+  transition: transform 180ms ease-in, opacity 180ms ease-in;
+}
+.theme-arc.fa-bar[data-state='closed'] .fa-action,
+.theme-arc.fa-bar[data-state='closed'] .fa-more {
+  opacity: 0;
+  transform:
+    translate(-50%, 50%)
+    rotate(calc(-90deg + var(--fa-i) * 180deg / max(1, calc(var(--fa-n) - 1))))
+    translateY(0)
+    rotate(calc(90deg - var(--fa-i) * 180deg / max(1, calc(var(--fa-n) - 1))));
+  transition-delay: 0ms;
+}
+.theme-arc.fa-bar .fa-action[data-variant='danger'] {
+  color: var(--fa-danger);
+}
+.theme-arc.fa-bar .fa-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Mini preview tile */
+.fa-mini.theme-arc {
+  --mini-bg: transparent;
+  --mini-border: none;
+  --mini-shadow: none;
+  position: relative;
+  width: 170px;
+  height: 90px;
+  padding: 0;
+  gap: 0;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+.fa-mini.theme-arc::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 132px;
+  height: 132px;
+  margin-left: -66px;
+  border-radius: 50%;
+  border: 1px dashed oklch(72% 0.005 270 / 0.45);
+  clip-path: inset(0 0 50% 0);
+}
+.fa-mini.theme-arc .fa-mini-action {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 50%;
+  background: oklch(20% 0.018 270);
+  color: oklch(96% 0.005 80);
+  border: 1px solid oklch(40% 0.018 270);
+  box-shadow: 0 4px 10px oklch(15% 0.018 270 / 0.4);
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transform:
+    translate(-50%, 50%)
+    rotate(calc(-90deg + var(--mini-i, 0) * 180deg / max(1, calc(var(--mini-n, 4) - 1))))
+    translateY(-60px)
+    rotate(calc(90deg - var(--mini-i, 0) * 180deg / max(1, calc(var(--mini-n, 4) - 1))));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-arc.fa-bar .fa-action,
+  .theme-arc.fa-bar .fa-more {
+    transition-delay: 0ms;
+  }
+}

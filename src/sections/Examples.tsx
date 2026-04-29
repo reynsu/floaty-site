@@ -460,6 +460,56 @@ show([
   { id: 'pin',      icon: <PinIcon />,      ariaLabel: 'Pin',      onSelect: pin },
 ]);`;
 
+function RadialDemo() {
+  const { show } = useFloaterActions();
+  return (
+    <div className="demo-center demo-center-tall">
+      <button
+        type="button"
+        className="demo-trigger"
+        onClick={() =>
+          show([
+            { id: 'heart',    icon: <Stroke d={ICONS.heart} />,    ariaLabel: 'Like',     onSelect: () => {} },
+            { id: 'bookmark', icon: <Stroke d={ICONS.bookmark} />, ariaLabel: 'Bookmark', onSelect: () => {} },
+            { id: 'pin',      icon: <Stroke d={ICONS.pin} />,      ariaLabel: 'Pin',      onSelect: () => {} },
+            { id: 'share',    icon: <Stroke d={ICONS.share} />,    ariaLabel: 'Share',    onSelect: () => {} },
+            { id: 'copy',     icon: <Stroke d={ICONS.copy} />,     ariaLabel: 'Copy',     onSelect: () => {} },
+            { id: 'trash',    icon: <Stroke d={ICONS.trash} />,    ariaLabel: 'Delete',
+              variant: 'danger', onSelect: () => {} },
+          ])
+        }
+      >
+        Show radial dial
+      </button>
+    </div>
+  );
+}
+
+const radialCode = `// theme-radial — actions distributed around a ring.
+// The lib exposes --fa-i (button index) and --fa-n (slot count)
+// on every action button. theme-radial uses them to compute angle:
+//
+//   transform:
+//     rotate(calc(var(--fa-i) * 360deg / var(--fa-n)))
+//     translateY(-var(--fa-radius-px))
+//     rotate(calc(-1 * var(--fa-i) * 360deg / var(--fa-n)));
+//
+// Stagger the entrance with transition-delay: calc(var(--fa-i) * 35ms)
+
+<FloaterActionsProvider maxVisible={6} className="theme-radial">
+  <App />
+</FloaterActionsProvider>
+
+show([
+  { id: 'heart',    icon: <HeartIcon />,    ariaLabel: 'Like',     onSelect: like },
+  { id: 'bookmark', icon: <BookmarkIcon />, ariaLabel: 'Bookmark', onSelect: bm   },
+  { id: 'pin',      icon: <PinIcon />,      ariaLabel: 'Pin',      onSelect: pin  },
+  { id: 'share',    icon: <ShareIcon />,    ariaLabel: 'Share',    onSelect: shr  },
+  { id: 'copy',     icon: <CopyIcon />,     ariaLabel: 'Copy',     onSelect: cpy  },
+  { id: 'trash',    icon: <TrashIcon />,    ariaLabel: 'Delete',
+    variant: 'danger', onSelect: del },
+]);`;
+
 // ──────────────────────────────────────────────────────────
 //  Layout
 // ──────────────────────────────────────────────────────────
@@ -470,7 +520,7 @@ export function Examples() {
         <div className="section-h">
           <div>
             <span className="kicker">Examples</span>
-            <h2>Six real use cases.</h2>
+            <h2>Seven real use cases.</h2>
           </div>
           <span className="section-h-meta">All examples run live on this page.</span>
         </div>
@@ -535,6 +585,16 @@ export function Examples() {
               desc="Button auto-squares to --fa-action-h. Pair with theme-circle for a perfect-circle row."
               demo={<IconsOnlyDemo />}
               code={iconsCode}
+            />
+          </FloaterActionsProvider>
+
+          <FloaterActionsProvider maxVisible={6} className="theme-radial">
+            <ExampleCard
+              no="07 / Radial dial"
+              name="Donut layout — buttons orbit a center"
+              desc="The bar exposes --fa-i / --fa-n on each action; theme-radial uses them to compute angles. Pure CSS, staggered entrance."
+              demo={<RadialDemo />}
+              code={radialCode}
             />
           </FloaterActionsProvider>
         </div>

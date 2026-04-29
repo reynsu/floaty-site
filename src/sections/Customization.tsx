@@ -26,6 +26,8 @@ type Variant = {
   band: Band;
   details: string[];
   cssCode: string;
+  /** "row" → flat .fa-mini grid · "radial"/"arc" → custom mini layout */
+  shape?: 'row' | 'radial' | 'arc';
   featured?: boolean;
 };
 
@@ -57,7 +59,7 @@ const variants: Variant[] = [
   },
   {
     id: 'brutalist',
-    no: '05',
+    no: '02',
     name: 'Brutalist',
     themeClass: 'theme-brutalist',
     desc: 'Two-pixel solid border, hard 5-pixel offset shadow, monospace. Refuses to be tasteful.',
@@ -79,34 +81,80 @@ const variants: Variant[] = [
 }`,
   },
   {
-    id: 'acid',
-    no: '12',
-    name: 'Acid',
-    themeClass: 'theme-acid',
-    desc: 'Saturated lime, uppercase, tight letter-spacing. Loud on purpose — for confirmation flows that must be impossible to miss.',
-    band: 'lime',
+    id: 'radial',
+    no: '03',
+    name: 'Radial',
+    themeClass: 'theme-radial',
+    desc: 'Donut layout — actions orbit a center using `--fa-i` / `--fa-n`. Pure CSS, no JS layout math, staggered entrance.',
+    band: 'paper',
     featured: true,
+    shape: 'radial',
     details: [
-      '--fa-bg: lime · chroma 0.20',
-      'text-transform: uppercase',
-      'font-weight: 700',
-      'letter-spacing: 0.02 em',
+      '--fa-display: block (escape flex row)',
+      '--fa-width / --fa-height: square canvas',
+      'transform per-button: rotate→translate→un-rotate',
+      'transition-delay: calc(var(--fa-i) * 35ms)',
     ],
-    cssCode: `.theme-acid.fa-bar {
-  --fa-bg: oklch(78% 0.20 110);
-  --fa-fg: oklch(15% 0.04 110);
-  --fa-border: oklch(60% 0.18 110);
-  --fa-radius: 8px;
-  --fa-shadow: 0 12px 32px oklch(78% 0.20 110 / .5);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  font-size: 12px;
+    cssCode: `.theme-radial.fa-bar {
+  --fa-display: block;
+  --fa-width: 220px;
+  --fa-height: 220px;
+  --fa-radius-px: 90px;
+  --fa-bg: transparent;
+  --fa-shadow: none;
+}
+.theme-radial .fa-action {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  /* --fa-i (index) and --fa-n (slot count)
+     are set by floaty as inline style vars */
+  transform:
+    translate(-50%, -50%)
+    rotate(calc(var(--fa-i) * 360deg / var(--fa-n)))
+    translateY(calc(-1 * var(--fa-radius-px)))
+    rotate(calc(-1 * var(--fa-i) * 360deg / var(--fa-n)));
+  transition-delay: calc(var(--fa-i) * 35ms);
+}`,
+  },
+  {
+    id: 'arc',
+    no: '04',
+    name: 'Arc',
+    themeClass: 'theme-arc',
+    desc: 'Half-moon fan — same primitives as radial, but constrained to 180°. Buttons rise from a baseline.',
+    band: 'dark',
+    shape: 'arc',
+    details: [
+      'spread = 180° (not 360°)',
+      'angle = -90° + i * 180° / (n-1)',
+      'shape only changes one transform line',
+      'inherits --fa-i / --fa-n knobs',
+    ],
+    cssCode: `.theme-arc.fa-bar {
+  --fa-display: block;
+  --fa-width: 280px;
+  --fa-height: 150px;
+  --fa-radius-px: 110px;
+}
+.theme-arc .fa-action {
+  position: absolute;
+  left: 50%; bottom: 0;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  transform:
+    translate(-50%, 50%)
+    rotate(calc(-90deg + var(--fa-i) * 180deg
+                  / max(1, calc(var(--fa-n) - 1))))
+    translateY(calc(-1 * var(--fa-radius-px)))
+    rotate(calc(90deg - var(--fa-i) * 180deg
+                  / max(1, calc(var(--fa-n) - 1))));
 }`,
   },
   {
     id: 'midnight',
-    no: '02',
+    no: '05',
     name: 'Midnight',
     themeClass: 'theme-midnight',
     desc: 'Deep ink for dark UIs.',
@@ -127,7 +175,7 @@ const variants: Variant[] = [
   },
   {
     id: 'glass',
-    no: '03',
+    no: '06',
     name: 'Glass',
     themeClass: 'theme-glass',
     desc: 'Translucent surface with backdrop-filter blur.',
@@ -147,29 +195,8 @@ const variants: Variant[] = [
 }`,
   },
   {
-    id: 'pill',
-    no: '04',
-    name: 'Pill',
-    themeClass: 'theme-pill',
-    desc: 'Fully rounded dock-style. Ink background, ghost actions.',
-    band: 'dark',
-    details: [
-      '--fa-radius: 999 px',
-      '--fa-radius-inner: 999 px',
-      '--fa-bg: ink',
-      'no border',
-    ],
-    cssCode: `.theme-pill.fa-bar {
-  --fa-bg: oklch(15% 0.018 270);
-  --fa-fg: oklch(96% 0.005 80);
-  --fa-border: transparent;
-  --fa-radius: 999px;
-  --fa-radius-inner: 999px;
-}`,
-  },
-  {
     id: 'terminal',
-    no: '06',
+    no: '07',
     name: 'Terminal',
     themeClass: 'theme-terminal',
     desc: 'Phosphor green on deep green. Mono, lowercase.',
@@ -191,202 +218,32 @@ const variants: Variant[] = [
 }`,
   },
   {
-    id: 'mac',
-    no: '07',
-    name: 'macOS',
-    themeClass: 'theme-mac',
-    desc: 'System-toolbar feel — translucent, glossy, soft radius.',
-    band: 'gradient',
-    details: [
-      'backdrop-filter: blur(40 px) saturate(180%)',
-      'inset highlight (0.5 px white)',
-      '--fa-radius: 11 px',
-      'translucent base',
-    ],
-    cssCode: `.theme-mac.fa-bar {
-  --fa-bg: oklch(96% 0.005 270 / 0.85);
-  --fa-fg: oklch(15% 0.018 270);
-  --fa-radius: 11px;
-  --fa-shadow:
-    inset 0 .5px 0 oklch(100% 0 0 / .6),
-    0 14px 40px oklch(15% 0.018 270 / .18);
-  backdrop-filter: blur(40px) saturate(180%);
-}`,
-  },
-  {
-    id: 'stripe',
+    id: 'acid',
     no: '08',
-    name: 'Stripe',
-    themeClass: 'theme-stripe',
-    desc: 'Subtle linear-gradient surface, cool-blue tint.',
-    band: 'paper',
+    name: 'Acid',
+    themeClass: 'theme-acid',
+    desc: 'Saturated lime, uppercase, tight letter-spacing. Loud on purpose — for confirmation flows that must be impossible to miss.',
+    band: 'lime',
     details: [
-      'background: linear-gradient(180deg, …)',
-      '--fa-fg: deep blue ink',
-      '--fa-border: cool blue 85%',
-      '--fa-radius: 10 px',
-    ],
-    cssCode: `.theme-stripe.fa-bar {
-  background: linear-gradient(180deg,
-    oklch(99% 0.003 240),
-    oklch(96% 0.015 240));
-  --fa-fg: oklch(20% 0.05 240);
-  --fa-border: oklch(85% 0.04 240);
-  --fa-radius: 10px;
-}`,
-  },
-  {
-    id: 'notion',
-    no: '09',
-    name: 'Notion',
-    themeClass: 'theme-notion',
-    desc: 'Tight 6-pixel corners, layered hairlines + soft drop shadow.',
-    band: 'paper',
-    details: [
-      '--fa-radius: 6 px',
-      'shadow: 1 px ring + 2 blurs',
-      '--fa-action-bg-hover: 6% ink',
-      'minimal accent',
-    ],
-    cssCode: `.theme-notion.fa-bar {
-  --fa-bg: oklch(98% 0.005 80);
-  --fa-fg: oklch(15% 0.018 270);
-  --fa-border: oklch(15% 0.018 270 / .08);
-  --fa-radius: 6px;
-  --fa-shadow:
-    0 0 0 1px oklch(15% 0.018 270 / .04),
-    0 4px 12px  oklch(15% 0.018 270 / .08),
-    0 12px 32px oklch(15% 0.018 270 / .06);
-}`,
-  },
-  {
-    id: 'discord',
-    no: '10',
-    name: 'Discord',
-    themeClass: 'theme-discord',
-    desc: 'Branded purple, bold weight, generous radius.',
-    band: 'discord',
-    details: [
-      '--fa-bg: brand purple',
-      '--fa-fg: paper white',
-      'font-weight: 600',
-      '--fa-radius: 14 px',
-    ],
-    cssCode: `.theme-discord.fa-bar {
-  --fa-bg: oklch(38% 0.10 270);
-  --fa-fg: oklch(96% 0.005 80);
-  --fa-border: oklch(48% 0.12 270);
-  --fa-radius: 14px;
-  --fa-action-bg-hover: oklch(45% 0.12 270);
-  font-weight: 600;
-}`,
-  },
-  {
-    id: 'pastel',
-    no: '11',
-    name: 'Pastel',
-    themeClass: 'theme-pastel',
-    desc: 'Warm peach surface, 18-pixel radius. Friendly.',
-    band: 'warm',
-    details: [
-      '--fa-bg: oklch(94% 0.04 25)',
-      '--fa-fg: oklch(28% 0.10 25)',
-      '--fa-radius: 18 px',
-      'shadow tinted peach',
-    ],
-    cssCode: `.theme-pastel.fa-bar {
-  --fa-bg: oklch(94% 0.04 25);
-  --fa-fg: oklch(28% 0.10 25);
-  --fa-border: oklch(82% 0.08 25);
-  --fa-radius: 18px;
-  --fa-radius-inner: 12px;
-  --fa-shadow: 0 12px 32px oklch(75% 0.10 25 / .5);
-}`,
-  },
-
-  /* ── New variants 13 → 24 ─────────────────────────────── */
-  {
-    id: 'dock',
-    no: '13',
-    name: 'Dock',
-    themeClass: 'theme-dock',
-    desc: 'Compact translucent dock — actions hug their content, big radius.',
-    band: 'dark',
-    details: [
-      '--fa-width: auto · shrinks to fit',
-      '--fa-action-flex: 0 0 auto',
-      '--fa-padding: 8 px · gap 4 px',
-      'backdrop-filter: blur(28px) saturate(180%)',
-    ],
-    cssCode: `.theme-dock.fa-bar {
-  --fa-bg: oklch(15% 0.018 270 / .78);
-  --fa-fg: oklch(96% 0.005 80);
-  --fa-radius: 22px;
-  --fa-padding: 8px;
-  --fa-gap: 4px;
-  --fa-action-h: 38px;
-  --fa-action-flex: 0 0 auto;     /* don't stretch */
-  --fa-width: auto;                /* hug content   */
-  backdrop-filter: blur(28px) saturate(180%);
-}`,
-  },
-  {
-    id: 'neon',
-    no: '14',
-    name: 'Neon',
-    themeClass: 'theme-neon',
-    desc: 'Synthwave glow — saturated magenta on near-black, all-caps mono.',
-    band: 'neon',
-    details: [
-      '--fa-bg: oklch(14% 0.04 290)',
-      'box-shadow: layered 24+60 px glow',
+      '--fa-bg: lime · chroma 0.20',
       'text-transform: uppercase',
-      "font-family: 'JetBrains Mono'",
+      'font-weight: 700',
+      'letter-spacing: 0.02 em',
     ],
-    cssCode: `.theme-neon.fa-bar {
-  --fa-bg: oklch(14% 0.04 290);
-  --fa-fg: oklch(94% 0.10 320);
-  --fa-border: oklch(70% 0.25 320);
-  --fa-shadow:
-    0 0 0 1px  oklch(70% 0.25 320 / .55),
-    0 0 24px   oklch(70% 0.25 320 / .45),
-    0 0 60px   oklch(70% 0.25 320 / .35);
-  font-family: 'JetBrains Mono', monospace;
+    cssCode: `.theme-acid.fa-bar {
+  --fa-bg: oklch(78% 0.20 110);
+  --fa-fg: oklch(15% 0.04 110);
+  --fa-border: oklch(60% 0.18 110);
+  --fa-radius: 8px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-}`,
-  },
-  {
-    id: 'outline',
-    no: '15',
-    name: 'Outline',
-    themeClass: 'theme-outline',
-    desc: 'No fill, just stroke. Inverts on hover. The minimalist option.',
-    band: 'paper',
-    details: [
-      '--fa-bg: transparent',
-      '--fa-border-w: 1.5 px',
-      '--fa-radius: 999 px',
-      'hover inverts to ink-on-paper',
-    ],
-    cssCode: `.theme-outline.fa-bar {
-  --fa-bg: transparent;
-  --fa-fg: oklch(15% 0.018 270);
-  --fa-border: oklch(15% 0.018 270);
-  --fa-border-w: 1.5px;
-  --fa-radius: 999px;
-  --fa-padding: 4px;
-  --fa-action-bg-hover: oklch(15% 0.018 270);
-  --fa-shadow: none;
-  backdrop-filter: blur(8px);
-}
-.theme-outline .fa-action:hover {
-  color: oklch(98% 0.003 80);   /* invert text */
+  font-size: 12px;
 }`,
   },
   {
     id: 'tape',
-    no: '16',
+    no: '09',
     name: 'Tape',
     themeClass: 'theme-tape',
     desc: 'Masking-tape on a wall — dashed border, drawn shadow, ~1° tilt.',
@@ -410,134 +267,8 @@ const variants: Variant[] = [
 }`,
   },
   {
-    id: 'game',
-    no: '17',
-    name: 'Game',
-    themeClass: 'theme-game',
-    desc: 'Bright candy with a heavy 6-pixel drop. Reads as a video-game UI.',
-    band: 'candy',
-    details: [
-      '--fa-border-w: 3 px solid ink',
-      '--fa-shadow: 6 px 6 px 0 ink',
-      '--fa-action-bg: light tint (not transparent)',
-      '--fa-action-fw: 700',
-    ],
-    cssCode: `.theme-game.fa-bar {
-  --fa-bg: oklch(75% 0.20 25);
-  --fa-fg: oklch(20% 0.05 25);
-  --fa-border: oklch(20% 0.05 25);
-  --fa-border-w: 3px;
-  --fa-action-bg: oklch(85% 0.16 25);   /* tile bg */
-  --fa-shadow: 6px 6px 0 oklch(20% 0.05 25);
-  --fa-action-fw: 700;
-}`,
-  },
-  {
-    id: 'gradient',
-    no: '18',
-    name: 'Gradient',
-    themeClass: 'theme-gradient',
-    desc: 'Sunset wash — orange → magenta → indigo. Glowing shadow tinted.',
-    band: 'sunset',
-    details: [
-      'background: linear-gradient(135deg, …)',
-      '--fa-action-bg: rgba(white, 0.10)',
-      '--fa-shadow: 0 16 px 40 px tinted',
-      '--fa-action-fw: 600',
-    ],
-    cssCode: `.theme-gradient.fa-bar {
-  background: linear-gradient(135deg,
-    oklch(72% 0.20 30)  0%,
-    oklch(65% 0.22 340) 50%,
-    oklch(60% 0.20 280) 100%);
-  --fa-fg: oklch(98% 0.003 80);
-  --fa-action-bg:       oklch(98% 0.003 80 / .10);
-  --fa-action-bg-hover: oklch(98% 0.003 80 / .20);
-  --fa-shadow: 0 16px 40px oklch(60% 0.20 280 / .45);
-}`,
-  },
-  {
-    id: 'material',
-    no: '19',
-    name: 'Material',
-    themeClass: 'theme-material',
-    desc: 'Material 3 elevated chip — generous radius, multi-layer drop shadow.',
-    band: 'ocean',
-    details: [
-      '--fa-radius: 28 px (chip)',
-      '--fa-action-px: 18 px',
-      '--fa-gap: 0 (no separator)',
-      'shadow: 3-layer elevation',
-    ],
-    cssCode: `.theme-material.fa-bar {
-  --fa-bg: oklch(96% 0.05 250);
-  --fa-fg: oklch(28% 0.10 250);
-  --fa-radius: 28px;
-  --fa-radius-inner: 20px;
-  --fa-padding: 4px;
-  --fa-gap: 0;
-  --fa-action-px: 18px;
-  --fa-shadow:
-    0 1px  3px  oklch(15% 0.05 250 / .12),
-    0 2px  8px  oklch(15% 0.05 250 / .08),
-    0 12px 28px oklch(28% 0.10 250 / .18);
-}`,
-  },
-  {
-    id: 'receipt',
-    no: '20',
-    name: 'Receipt',
-    themeClass: 'theme-receipt',
-    desc: 'Italic Georgia, monochrome ink, dashed bottom edge — 1990s till slip.',
-    band: 'paper',
-    details: [
-      "font-family: 'Georgia', italic",
-      '--fa-radius: 0 (no rounding)',
-      'border-bottom: 2 px dashed',
-      '--fa-padding: 14 12 10',
-    ],
-    cssCode: `.theme-receipt.fa-bar {
-  --fa-bg: oklch(98% 0.005 80);
-  --fa-fg: oklch(15% 0.005 80);
-  --fa-radius: 0;
-  --fa-padding: 14px 12px 10px;
-  --fa-gap: 0;
-  font-family: 'Georgia', serif;
-  font-style: italic;
-  border-bottom: 2px dashed oklch(15% 0.005 80);
-}`,
-  },
-  {
-    id: 'sticky',
-    no: '21',
-    name: 'Sticky note',
-    themeClass: 'theme-sticky',
-    desc: 'Post-it yellow, ~2° rotation, handwritten font, drawn drop shadow.',
-    band: 'yellow',
-    details: [
-      "font-family: 'Caveat', cursive",
-      'transform on open: rotate(2deg)',
-      'shadow: 8 14 18 px ink, drawn feel',
-      '--fa-radius: 2 px (paper edge)',
-    ],
-    cssCode: `.theme-sticky.fa-bar {
-  --fa-bg: oklch(94% 0.13 95);
-  --fa-fg: oklch(22% 0.06 95);
-  --fa-radius: 2px;
-  --fa-padding: 10px;
-  font-family: 'Caveat', cursive;
-  font-size: 17px;
-  --fa-shadow:
-    0 2px 0 oklch(85% 0.16 95),
-    8px 14px 18px oklch(22% 0.06 95 / .32);
-}
-.theme-sticky.fa-bar[data-state='open'] {
-  transform: translate(-50%, 0) rotate(2deg);
-}`,
-  },
-  {
     id: 'pixel',
-    no: '22',
+    no: '10',
     name: 'Pixel',
     themeClass: 'theme-pixel',
     desc: '8-bit chunky — layered offset shadows mimic stepped pixel borders.',
@@ -563,60 +294,6 @@ const variants: Variant[] = [
   image-rendering: pixelated;
 }`,
   },
-  {
-    id: 'circle',
-    no: '23',
-    name: 'Circle',
-    themeClass: 'theme-circle',
-    desc: 'Each action a perfect 44 px circle. The bar shrinks to icon-row.',
-    band: 'paper',
-    details: [
-      '--fa-radius-inner: 999 px',
-      '--fa-action-h: 44 px',
-      '--fa-action-px: 0 · py: 0',
-      '--fa-action-flex: 0 0 44 px',
-    ],
-    cssCode: `.theme-circle.fa-bar {
-  --fa-bg: oklch(98% 0.005 80);
-  --fa-fg: oklch(15% 0.018 270);
-  --fa-radius: 999px;
-  --fa-radius-inner: 999px;       /* round actions */
-  --fa-action-h: 44px;
-  --fa-action-px: 0;
-  --fa-action-py: 0;
-  --fa-action-flex: 0 0 44px;     /* fixed circle  */
-  --fa-width: auto;                /* hug content   */
-  --fa-action-bg: oklch(94% 0.005 270);
-}`,
-  },
-  {
-    id: 'toast',
-    no: '24',
-    name: 'Toast',
-    themeClass: 'theme-toast',
-    desc: 'Anchored to the top instead of bottom — like a notification banner.',
-    band: 'dark',
-    details: [
-      'bottom: auto · top: 16 px',
-      'closed transform: translate(-50%, -180%)',
-      '--fa-width: auto · hugs content',
-      '--fa-radius: 999 px',
-    ],
-    cssCode: `.theme-toast.fa-bar {
-  --fa-bg: oklch(20% 0.018 270);
-  --fa-fg: oklch(96% 0.005 80);
-  --fa-radius: 999px;
-  --fa-padding: 4px;
-  --fa-width: auto;
-  --fa-action-h: 36px;
-  --fa-action-flex: 0 0 auto;
-  bottom: auto;
-  top: calc(env(safe-area-inset-top, 0px) + 16px);
-}
-.theme-toast.fa-bar[data-state='closed'] {
-  transform: translate(-50%, -180%);   /* slide up & out */
-}`,
-  },
 ];
 
 const previewActions = [
@@ -633,7 +310,10 @@ const liveActions = [
   { id: 'e', label: 'Delete', variant: 'danger' as const, onSelect: () => {} },
 ];
 
-function MiniBar({ themeClass }: { themeClass: string }) {
+/* ── Mini bar previews ─────────────────────────────── */
+function MiniBar({ themeClass, shape }: { themeClass: string; shape?: Variant['shape'] }) {
+  if (shape === 'radial') return <MiniRadial themeClass={themeClass} />;
+  if (shape === 'arc') return <MiniArc themeClass={themeClass} />;
   return (
     <div className={`fa-mini ${themeClass}`} aria-hidden="true">
       {previewActions.map((a) => (
@@ -642,6 +322,42 @@ function MiniBar({ themeClass }: { themeClass: string }) {
         </span>
       ))}
       <span className="fa-mini-action more">+</span>
+    </div>
+  );
+}
+
+const MINI_RADIAL_LABELS = ['♥', '★', '⌖', '↗', '+'];
+function MiniRadial({ themeClass }: { themeClass: string }) {
+  const n = MINI_RADIAL_LABELS.length;
+  return (
+    <div className={`fa-mini ${themeClass}`} aria-hidden="true">
+      {MINI_RADIAL_LABELS.map((l, i) => (
+        <span
+          key={i}
+          className="fa-mini-action"
+          style={{ ['--mini-i' as string]: i, ['--mini-n' as string]: n }}
+        >
+          {l}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+const MINI_ARC_LABELS = ['↖', '↑', '↗', '+'];
+function MiniArc({ themeClass }: { themeClass: string }) {
+  const n = MINI_ARC_LABELS.length;
+  return (
+    <div className={`fa-mini ${themeClass}`} aria-hidden="true">
+      {MINI_ARC_LABELS.map((l, i) => (
+        <span
+          key={i}
+          className="fa-mini-action"
+          style={{ ['--mini-i' as string]: i, ['--mini-n' as string]: n }}
+        >
+          {l}
+        </span>
+      ))}
     </div>
   );
 }
@@ -661,10 +377,11 @@ function Summon({ children }: { children?: ReactNode }) {
 
 // ─── Featured (spotlight) ────────────────────────────
 function Spotlight({ v }: { v: Variant }) {
+  const provMaxVisible = v.shape === 'radial' ? 6 : v.shape === 'arc' ? 5 : 3;
   return (
     <article className={`spotlight band-${v.band}`}>
       <div className="spotlight-stage">
-        <MiniBar themeClass={v.themeClass} />
+        <MiniBar themeClass={v.themeClass} shape={v.shape} />
       </div>
       <div className="spotlight-info">
         <div className="spotlight-meta">
@@ -678,7 +395,7 @@ function Spotlight({ v }: { v: Variant }) {
           ))}
         </ul>
         <div className="spotlight-actions">
-          <FloaterActionsProvider maxVisible={3} className={v.themeClass}>
+          <FloaterActionsProvider maxVisible={provMaxVisible} className={v.themeClass}>
             <Summon>
               Summon at the bottom of the page <span aria-hidden="true">↗</span>
             </Summon>
@@ -690,13 +407,14 @@ function Spotlight({ v }: { v: Variant }) {
   );
 }
 
-// ─── Mosaic (the other 9) ────────────────────────────
+// ─── Mosaic ──────────────────────────────────────────
 function Tile({ v }: { v: Variant }) {
   const [openCss, setOpenCss] = useState(false);
+  const provMaxVisible = v.shape === 'radial' ? 6 : v.shape === 'arc' ? 5 : 3;
   return (
     <div className={`tile-variant band-${v.band}`}>
       <div className="tile-stage">
-        <MiniBar themeClass={v.themeClass} />
+        <MiniBar themeClass={v.themeClass} shape={v.shape} />
       </div>
       <div className="tile-meta">
         <div>
@@ -704,7 +422,7 @@ function Tile({ v }: { v: Variant }) {
           <h3 className="tile-name">{v.name}</h3>
         </div>
         <div className="tile-actions">
-          <FloaterActionsProvider maxVisible={3} className={v.themeClass}>
+          <FloaterActionsProvider maxVisible={provMaxVisible} className={v.themeClass}>
             <SummonInline />
           </FloaterActionsProvider>
           <button
@@ -767,10 +485,10 @@ export function Customization() {
         <div className="section-h">
           <div>
             <span className="kicker">Customization</span>
-            <h2>12 themes from one className.</h2>
+            <h2>10 themes from one className.</h2>
           </div>
           <span className="section-h-meta">
-            Three featured variants below. Nine more in the gallery.
+            Three featured variants below — including layouts that escape the row entirely.
           </span>
         </div>
       </div>
@@ -796,9 +514,12 @@ export function Customization() {
 
         <p className="customize-foot">
           Every variant is a className applied to the Provider. The bar reads CSS custom
-          properties at runtime — no JS theme provider, no context juggling. Compose your
-          own by overriding <code>--fa-bg</code>, <code>--fa-fg</code>,{' '}
-          <code>--fa-radius</code>, <code>--fa-shadow</code>, and the action background tokens.
+          properties at runtime — no JS theme provider, no context juggling. Override{' '}
+          <code>--fa-bg</code>, <code>--fa-fg</code>, <code>--fa-radius</code>,{' '}
+          <code>--fa-shadow</code> for color/shape, or escape the flex row entirely with{' '}
+          <code>--fa-display</code>, <code>--fa-width</code>, <code>--fa-height</code> and
+          per-button <code>--fa-i</code> / <code>--fa-n</code> to build radial, arc, spiral,
+          or grid layouts in pure CSS.
         </p>
       </div>
     </section>
