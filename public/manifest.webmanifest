@@ -1,6 +1,6 @@
 {
-  "name": "floaty",
-  "short_name": "floaty",
+  "name": "react-floaty",
+  "short_name": "react-floaty",
   "description": "A microscopic React floating action toolbar.",
   "start_url": "/",
   "display": "standalone",

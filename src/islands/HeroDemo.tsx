@@ -43,7 +43,7 @@ function HeroDemoStage() {
   return (
     <div className="hero-demo-stage">
       <div className="hero-demo-target" data-open={open} aria-hidden="true">
-        <div className="hero-demo-target-label">↓ floaty</div>
+        <div className="hero-demo-target-label">↓ react-floaty</div>
         <div className="hero-demo-target-line" />
       </div>
       <button

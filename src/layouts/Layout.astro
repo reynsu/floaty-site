@@ -9,7 +9,7 @@ interface Props {
 }
 
 const {
-  title = 'floaty — React floating action toolbar',
+  title = 'react-floaty — React floating action toolbar',
   description = 'A microscopic React toolbar that slides up when something is selected. ~8 KB ESM, zero runtime dependencies, SSR-safe, fully themable via CSS custom properties.',
 } = Astro.props;
 
@@ -18,7 +18,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://floaty.dev'
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareSourceCode',
-  name: 'floaty',
+  name: 'react-floaty',
   description,
   codeRepository: 'https://github.com/reynsu/floaty',
   programmingLanguage: 'TypeScript',
@@ -48,7 +48,7 @@ const jsonLd = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:site_name" content="floaty" />
+    <meta property="og:site_name" content="react-floaty" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary" />
