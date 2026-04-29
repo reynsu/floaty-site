@@ -12,3 +12,6 @@ coverage
 # Astro
 .astro/
 dist/
+
+# Vercel adapter output
+.vercel/

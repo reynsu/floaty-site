@@ -214,9 +214,15 @@ function PaletteDemo() {
     return () => window.removeEventListener('keydown', handler);
   }, [toggle, actions]);
 
+  // Modern userAgentData (Chromium 90+) with a fallback to userAgent for
+  // Safari/Firefox. navigator.platform is deprecated and avoided.
   const [isMac, setIsMac] = useState(false);
   useEffect(() => {
-    setIsMac(/Mac|iPhone|iPad/.test(navigator.platform));
+    const uaData = (navigator as Navigator & {
+      userAgentData?: { platform?: string };
+    }).userAgentData;
+    const platform = uaData?.platform ?? navigator.userAgent;
+    setIsMac(/Mac|iPhone|iPad|iOS/i.test(platform));
   }, []);
 
   return (

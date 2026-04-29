@@ -14,6 +14,7 @@ const {
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://floaty.dev').toString();
+const ogImage = new URL('/og-image.svg', Astro.site ?? 'https://floaty.dev').toString();
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -49,11 +50,17 @@ const jsonLd = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="react-floaty" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="react-floaty — Floating actions. For React. ~8 KB, zero deps." />
 
     <!-- Twitter -->
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://api.fontshare.com" />
@@ -81,7 +88,10 @@ const jsonLd = {
     <a href="#top" class="skip-link">Skip to content</a>
     <slot />
 
-    <!-- Scroll-reveal observer (replaces React hook). Inline = zero JS payload. -->
+    <!-- Scroll-reveal observer (replaces React hook). Inline = zero JS payload.
+         Contract: opt-in by setting `data-reveal=""` (empty string) in markup.
+         The observer promotes it to `data-reveal="in"` once visible. CSS keys
+         off both states. Any non-empty initial value is ignored intentionally. -->
     <script is:inline>
       (() => {
         const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
