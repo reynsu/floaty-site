@@ -372,6 +372,95 @@ const inboxCode = `function Inbox({ emails }: { emails: Email[] }) {
 }`;
 
 // ──────────────────────────────────────────────────────────
+//  05 — Icons (with and without label)
+// ──────────────────────────────────────────────────────────
+const Stroke = ({ d }: { d: string }) => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d={d} />
+  </svg>
+);
+
+const ICONS = {
+  heart:    'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z',
+  share:    'M16 6l-4-4-4 4 M12 2v13 M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4',
+  bookmark: 'M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z',
+  copy:     'M20 9h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2zM5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1',
+  trash:    'M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M10 11v6 M14 11v6',
+  pin:      'M12 17v5 M9 10.76V6 a2 2 0 0 1 2-2h2 a2 2 0 0 1 2 2v4.76 a3 3 0 0 0 1 2.24 H8 a3 3 0 0 0 1-2.24z',
+} as const;
+
+function IconsLabelDemo() {
+  const { show } = useFloaterActions();
+  return (
+    <div className="demo-center demo-center-tall">
+      <button
+        type="button"
+        className="demo-trigger"
+        onClick={() =>
+          show([
+            { id: 'copy',     label: 'Copy',     icon: <Stroke d={ICONS.copy} />,     onSelect: () => {} },
+            { id: 'share',    label: 'Share',    icon: <Stroke d={ICONS.share} />,    onSelect: () => {} },
+            { id: 'bookmark', label: 'Save',     icon: <Stroke d={ICONS.bookmark} />, onSelect: () => {} },
+            { id: 'trash',    label: 'Delete',   icon: <Stroke d={ICONS.trash} />,    variant: 'danger' as const, onSelect: () => {} },
+          ])
+        }
+      >
+        Show icons + labels
+      </button>
+    </div>
+  );
+}
+
+function IconsOnlyDemo() {
+  const { show } = useFloaterActions();
+  return (
+    <div className="demo-center demo-center-tall">
+      <button
+        type="button"
+        className="demo-trigger"
+        onClick={() =>
+          show([
+            { id: 'heart',    icon: <Stroke d={ICONS.heart} />,    ariaLabel: 'Like',     onSelect: () => {} },
+            { id: 'bookmark', icon: <Stroke d={ICONS.bookmark} />, ariaLabel: 'Bookmark', onSelect: () => {} },
+            { id: 'pin',      icon: <Stroke d={ICONS.pin} />,      ariaLabel: 'Pin',      onSelect: () => {} },
+            { id: 'share',    icon: <Stroke d={ICONS.share} />,    ariaLabel: 'Share',    onSelect: () => {} },
+            { id: 'copy',     icon: <Stroke d={ICONS.copy} />,     ariaLabel: 'Copy',     onSelect: () => {} },
+          ])
+        }
+      >
+        Show icon-only bar
+      </button>
+    </div>
+  );
+}
+
+const iconsCode = `// Pass icon next to label — both render side by side.
+show([
+  { id: 'copy',   label: 'Copy',   icon: <CopyIcon />,   onSelect: copy   },
+  { id: 'share',  label: 'Share',  icon: <ShareIcon />,  onSelect: share  },
+  { id: 'delete', label: 'Delete', icon: <TrashIcon />,
+    variant: 'danger', onSelect: del },
+]);
+
+// Omit label for icon-only — the button auto-squares
+// (data-icon-only is set on the element). ariaLabel is required
+// for screen reader accessibility.
+show([
+  { id: 'heart',    icon: <HeartIcon />,    ariaLabel: 'Like',     onSelect: like },
+  { id: 'bookmark', icon: <BookmarkIcon />, ariaLabel: 'Bookmark', onSelect: bookmark },
+  { id: 'pin',      icon: <PinIcon />,      ariaLabel: 'Pin',      onSelect: pin },
+]);`;
+
+// ──────────────────────────────────────────────────────────
 //  Layout
 // ──────────────────────────────────────────────────────────
 export function Examples() {
@@ -381,7 +470,7 @@ export function Examples() {
         <div className="section-h">
           <div>
             <span className="kicker">Examples</span>
-            <h2>Four real use cases.</h2>
+            <h2>Six real use cases.</h2>
           </div>
           <span className="section-h-meta">All examples run live on this page.</span>
         </div>
@@ -426,6 +515,26 @@ export function Examples() {
               demo={<InboxDemo />}
               code={inboxCode}
               hint="Tap rows to select."
+            />
+          </FloaterActionsProvider>
+
+          <FloaterActionsProvider maxVisible={4}>
+            <ExampleCard
+              no="05 / Icons + labels"
+              name="Each action gets an SVG icon next to its label"
+              desc="Pass icon prop alongside label. Renders side by side, gap controlled by --fa-action-gap."
+              demo={<IconsLabelDemo />}
+              code={iconsCode}
+            />
+          </FloaterActionsProvider>
+
+          <FloaterActionsProvider maxVisible={5} className="theme-circle">
+            <ExampleCard
+              no="06 / Icon-only"
+              name="Omit label, supply icon + ariaLabel"
+              desc="Button auto-squares to --fa-action-h. Pair with theme-circle for a perfect-circle row."
+              demo={<IconsOnlyDemo />}
+              code={iconsCode}
             />
           </FloaterActionsProvider>
         </div>
