@@ -1586,3 +1586,38 @@ html { color-scheme: light; }
 .skip-link:focus-visible {
   top: 12px;
 }
+
+/* ─── Scroll perf: defer rendering of off-screen content ────────
+ * `content-visibility: auto` lets the browser skip layout + paint
+ * for elements that aren't in/near the viewport. The intrinsic-size
+ * hint reserves space so the scrollbar doesn't jump as content gets
+ * promoted in/out of the rendered set.
+ *
+ * This is the single biggest win for fast-scroll smoothness on long
+ * pages with heavy CSS (gradients, multi-shadows, large sub-trees).
+ * ──────────────────────────────────────────────────────────────── */
+.example,
+.spotlight,
+.tile-variant {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 600px;
+}
+
+/* Sections themselves don't need content-visibility because their
+   children already have it; but we DO want layout containment so a
+   section's reflow can't ripple into its neighbors. */
+section {
+  contain: layout style;
+}
+
+/* The reveal initial state creates a stacking context per element
+   (opacity != 1). Combined with `transform: translate3d()` it forces
+   a compositor layer for every off-screen reveal node. Drop the 3d
+   translate — a plain translateY animates just as smoothly without
+   forcing a layer until the transition is actually running. */
+[data-reveal] {
+  transform: translateY(18px);
+}
+[data-reveal="in"] {
+  transform: none;
+}
