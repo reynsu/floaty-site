@@ -80,7 +80,7 @@ export function Hero() {
           <span className="kicker">v0.1.0 · public beta</span>
 
           <h1>
-            Floating actions<span className="slash">.</span>
+            Floating actions<span className="slash">.</span>{' '}
             <br />
             For React<span className="slash">.</span>
           </h1>

@@ -910,3 +910,203 @@ section + section { border-top: 1px solid var(--line); }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ──────────────────────────────────────────────────────────────
+   MOBILE — adapt, don't amputate.
+   Grid items get min-width: 0 to prevent content-driven overflow.
+   Wide layouts collapse. Padding tightens. Code blocks contain.
+   ──────────────────────────────────────────────────────────── */
+
+/* Universal fix for grid items overflowing due to long unbroken content
+   (CSS code, monospace lines). Applies everywhere. */
+.spotlight > *,
+.tile-grid > *,
+.api-grid > *,
+.tile-variant > *,
+.examples > article,
+.example-body,
+.example-head > *,
+.spotlight-info,
+.spotlight-stage,
+.tile-meta,
+.tile-stage {
+  min-width: 0;
+}
+
+/* Code blocks must fit their container, not push it wider. */
+.code,
+.spotlight-css,
+.tile-css pre,
+.demo-editor {
+  max-width: 100%;
+}
+
+/* ─── ≤ 720 px : tablet/large phone ─────────────────────── */
+@media (max-width: 720px) {
+  :root { --gutter: 18px; }
+
+  /* Section spacing */
+  section { padding-block: clamp(40px, 9vw, 64px); }
+
+  .section-h {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .section-h .section-h-meta { font-size: 12px; }
+
+  /* Hero */
+  .hero h1 { font-size: clamp(40px, 11vw, 64px); margin-bottom: 18px; }
+  .hero-prose { font-size: 16px; max-width: none; }
+  .hero-cta { gap: 10px; }
+
+  /* The hero's signature grid texture is busy on small screens — calm it. */
+  .hero-demo-stage {
+    background-size: 18px 18px;
+    padding: 32px 16px 96px;
+    min-height: 200px;
+  }
+  .hero-demo-target-line { height: 28px; }
+
+  /* Topbar — keep all links accessible, just tighten spacing */
+  .topbar-inner { font-size: 13px; }
+  .topbar-l { gap: 12px; }
+  .topbar-r { gap: 12px; }
+  .topbar .ver { font-size: 11px; padding: 1px 6px; }
+
+  /* Examples — stack the head: number on top of name, then desc, then tabs */
+  .example-head {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 14px 16px 12px;
+  }
+  .example-head .tabs {
+    justify-self: start;
+    margin-top: 6px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg);
+  }
+  .example-head .tabs .tab {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+  .example-head .tabs .tab[aria-selected='true']::after {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+  .example-no { letter-spacing: 0.04em; }
+  .example-name { font-size: 15px; }
+  .example-desc { font-size: 12.5px; line-height: 1.45; }
+  .example-stage { padding: 24px 16px; min-height: auto; }
+
+  /* Code panes a notch smaller */
+  .code { font-size: 12px; padding: 16px 16px; line-height: 1.65; }
+
+  /* Spotlights — already stack at 880, refine paddings */
+  .spotlight-stage { padding: 32px 18px; min-height: 180px; }
+  .spotlight-info { padding: 24px 18px 28px; gap: 10px; }
+  .spotlight-name { font-size: clamp(26px, 7vw, 32px); }
+  .spotlight-desc { font-size: 14.5px; }
+  .spotlight-css { font-size: 11.5px; padding: 12px 14px; }
+
+  /* Mosaic tile inner spacing */
+  .tile-stage { padding: 22px 14px; min-height: 90px; }
+  .tile-meta { padding: 10px 12px 4px; gap: 6px; }
+  .tile-desc { padding: 6px 12px 12px; font-size: 11.5px; }
+  .tile-actions { gap: 5px; }
+  .tile-summon { padding: 0 9px; font-size: 11.5px; }
+  .tile-toggle { width: 26px; height: 26px; }
+  .tile-css pre { font-size: 11px; padding: 11px 12px; }
+
+  /* API tables */
+  .api-table .row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 12px 0 14px;
+  }
+  .api-table .key { font-size: 12px; }
+  .api-table .val { font-size: 13px; }
+  .api-block-h { font-size: 13px; }
+
+  /* Footer */
+  .foot { gap: 10px; flex-direction: column; align-items: flex-start; padding-block: 24px; }
+  .foot-l { flex-wrap: wrap; gap: 8px 14px; }
+
+  /* Customize footnote: left-aligned reads better than centered on mobile */
+  .customize-foot { text-align: left; font-size: 13px; }
+
+  /* Demo gallery — fewer, bigger tiles */
+  .demo-gallery {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    max-width: 100%;
+  }
+
+  .demo-editor { font-size: 12px; padding: 14px 14px; }
+  .demo-editor .ln { grid-template-columns: 18px 1fr; gap: 10px; }
+
+  /* Inbox rows: hide preview, keep core info */
+  .demo-inbox .row {
+    grid-template-columns: 22px minmax(60px, 1fr) minmax(0, 2fr) auto;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  /* Hero tabs: a touch smaller */
+  .hero-demo-tabs .tab { height: 36px; padding: 0 12px; font-size: 12.5px; }
+}
+
+/* ─── ≤ 480 px : compact phones ─────────────────────────── */
+@media (max-width: 480px) {
+  :root { --gutter: 14px; }
+
+  /* Hero */
+  .hero h1 { font-size: clamp(36px, 13vw, 56px); }
+  .hero h1 br { display: none; }
+  .hero-prose { font-size: 15px; line-height: 1.45; }
+  .install-pill { font-size: 12px; padding: 9px 12px 9px 14px; }
+
+  /* Examples head — flatten further: number same row as name */
+  .example-head {
+    padding: 12px 14px 10px;
+  }
+  .example-name { font-size: 14px; }
+  .example-desc { font-size: 12px; }
+
+  /* Spotlight name shrink */
+  .spotlight-name { font-size: clamp(24px, 8vw, 28px); }
+
+  /* Mosaic at smallest → vertical list */
+  .tile-grid { grid-template-columns: 1fr; }
+
+  /* Demo gallery → 3 cols */
+  .demo-gallery { grid-template-columns: repeat(3, 1fr); }
+
+  /* Inbox: drop subject preview to free width */
+  .demo-inbox .row {
+    grid-template-columns: 22px minmax(50px, auto) 1fr;
+    grid-template-rows: auto;
+  }
+  .demo-inbox .subj { font-size: 12px; }
+  .demo-inbox .time { display: none; }
+
+  /* Topbar: hide secondary nav links, keep brand + GitHub */
+  .topbar-r a:not([aria-label='GitHub']) { display: none; }
+  .topbar-r .ver { display: none; }
+
+  /* Section h2 */
+  .section-h h2 { font-size: clamp(22px, 6vw, 28px); }
+  .kicker { font-size: 11px; }
+}
+
+/* ─── ≤ 360 px : the truly tiny ─────────────────────────── */
+@media (max-width: 360px) {
+  :root { --gutter: 12px; }
+  .hero h1 { font-size: clamp(32px, 14vw, 44px); }
+  .topbar-l .ver { display: none; }
+  .install-pill { font-size: 11.5px; }
+}
