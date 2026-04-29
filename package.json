@@ -5,21 +5,26 @@
   "type": "module",
   "description": "Showcase site for floaty — live demos and docs.",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "typecheck": "astro check"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "floaty": "file:../floater-actions"
+    "react-floaty": "file:../floater-actions"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/react": "^4.2.0",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/vercel": "^8.2.11",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.10"
+    "astro": "^5.1.1",
+    "typescript": "^5.6.3"
   }
 }

@@ -6,7 +6,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from 'react';
-import { FloaterActionsProvider, useFloaterActions, type FloaterAction } from 'floaty';
+import { FloaterActionsProvider, useFloaterActions, type FloaterAction } from 'react-floaty';
 
 // ─── Inline icons (zero deps) ────────────────────────
 const Stroke = ({ d }: { d: string }) => (
@@ -591,7 +591,7 @@ function maxVisibleFor(shape?: Variant['shape']): number {
 // ─── Featured (spotlight) ────────────────────────────
 function Spotlight({ v }: { v: Variant }) {
   return (
-    <article className={`spotlight band-${v.band}`} data-reveal="">
+    <article className={`spotlight band-${v.band}`}>
       <div className="spotlight-stage">
         <MiniBar themeClass={v.themeClass} shape={v.shape} />
       </div>
@@ -641,7 +641,6 @@ function TileBody({ v, onShowCss }: { v: Variant; onShowCss: (v: Variant) => voi
   return (
     <div
       className={`tile-variant band-${v.band}`}
-      data-reveal=""
       role="button"
       tabIndex={0}
       aria-label={`Summon ${v.name} bar`}
@@ -783,25 +782,13 @@ function highlightCss(code: string): ReactNode[] {
   return out;
 }
 
-export function Customization() {
+export default function Customization() {
   const featured = variants.filter((v) => v.featured);
   const mosaic = variants.filter((v) => !v.featured);
   const [cssVariant, setCssVariant] = useState<Variant | null>(null);
 
   return (
-    <section id="customize">
-      <div className="page">
-        <div className="section-h" data-reveal="">
-          <div>
-            <span className="kicker">Customization</span>
-            <h2>9 themes from one className.</h2>
-          </div>
-          <span className="section-h-meta">
-            Three featured variants below — including layouts that escape the row entirely.
-          </span>
-        </div>
-      </div>
-
+    <>
       <div className="page customize-spotlights">
         {featured.map((v) => (
           <Spotlight key={v.id} v={v} />
@@ -832,6 +819,6 @@ export function Customization() {
           or grid layouts in pure CSS.
         </p>
       </div>
-    </section>
+    </>
   );
 }

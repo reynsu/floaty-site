@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Topbar from '../components/Topbar.astro';
+import HeroLayout from '../sections/HeroLayout.astro';
+import ExamplesLayout from '../sections/ExamplesLayout.astro';
+import CustomizationLayout from '../sections/CustomizationLayout.astro';
+import API from '../sections/API.astro';
+import Footer from '../sections/Footer.astro';
+
+import HeroDemo from '../islands/HeroDemo';
+import Examples from '../islands/Examples';
+import Customization from '../islands/Customization';
+---
+
+<Layout>
+  <Topbar />
+  <main>
+    <HeroLayout>
+      <HeroDemo client:load />
+    </HeroLayout>
+
+    <ExamplesLayout>
+      <Examples client:only="react" />
+    </ExamplesLayout>
+
+    <CustomizationLayout>
+      <Customization client:only="react" />
+    </CustomizationLayout>
+
+    <API />
+  </main>
+  <Footer />
+</Layout>

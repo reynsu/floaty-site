@@ -1,0 +1,118 @@
+---
+import '../styles/global.css';
+import '../styles/themes.css';
+import 'react-floaty/styles.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'react-floaty — React floating action toolbar',
+  description = 'A microscopic React toolbar that slides up when something is selected. ~8 KB ESM, zero runtime dependencies, SSR-safe, fully themable via CSS custom properties.',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://floaty.dev').toString();
+const ogImage = new URL('/og-image.svg', Astro.site ?? 'https://floaty.dev').toString();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareSourceCode',
+  name: 'react-floaty',
+  description,
+  codeRepository: 'https://github.com/reynsu/floaty',
+  programmingLanguage: 'TypeScript',
+  runtimePlatform: 'React 18',
+  license: 'https://opensource.org/licenses/MIT',
+  url: canonical,
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#fafaf6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#191c22" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="react-floaty" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="react-floaty — Floating actions. For React. ~8 KB, zero deps." />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <!-- Favicons & PWA -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <title>{title}</title>
+  </head>
+  <body>
+    <a href="#top" class="skip-link">Skip to content</a>
+    <slot />
+
+    <!-- Scroll-reveal observer (replaces React hook). Inline = zero JS payload.
+         Contract: opt-in by setting `data-reveal=""` (empty string) in markup.
+         The observer promotes it to `data-reveal="in"` once visible. CSS keys
+         off both states. Any non-empty initial value is ignored intentionally. -->
+    <script is:inline>
+      (() => {
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const els = document.querySelectorAll('[data-reveal=""]');
+        if (reduce) {
+          els.forEach((el) => el.setAttribute('data-reveal', 'in'));
+          return;
+        }
+        const obs = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.setAttribute('data-reveal', 'in');
+                obs.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+        );
+        els.forEach((el) => obs.observe(el));
+      })();
+    </script>
+  </body>
+</html>
