@@ -76,22 +76,24 @@ export function Hero() {
   return (
     <section className="hero" id="top">
       <div className="page">
-        <span className="kicker">v0.1.0 · public beta</span>
+        <div className="content">
+          <span className="kicker">v0.1.0 · public beta</span>
 
-        <h1 style={{ marginTop: 20 }}>
-          Floating actions<span className="slash">.</span>
-          <br />
-          For React<span className="slash">.</span>
-        </h1>
+          <h1>
+            Floating actions<span className="slash">.</span>
+            <br />
+            For React<span className="slash">.</span>
+          </h1>
 
-        <p className="hero-prose">
-          A <b>React 18</b> component for the toolbar that slides up when something is
-          selected. Around <b>8 KB ESM</b> gzipped, with <b>zero runtime dependencies</b>,{' '}
-          <b>SSR-safe</b> rendering, and the <b>WAI-ARIA toolbar</b> pattern wired in.
-        </p>
+          <p className="hero-prose">
+            A <b>React 18</b> component for the toolbar that slides up when something is
+            selected. Around <b>8 KB ESM</b> gzipped, with <b>zero runtime dependencies</b>,{' '}
+            <b>SSR-safe</b> rendering, and the <b>WAI-ARIA toolbar</b> pattern wired in.
+          </p>
 
-        <div className="hero-cta">
-          <CopyableInstall />
+          <div className="hero-cta">
+            <CopyableInstall />
+          </div>
         </div>
 
         <div className="hero-demo">
