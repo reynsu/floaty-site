@@ -25,11 +25,13 @@ npm install
 npm run dev          # http://127.0.0.1:4321/
 ```
 
-The site uses `react-floaty` from a sibling local directory (`file:../floater-actions`).
-For deployment, switch the dependency to the published version:
+The site pulls `react-floaty` directly from GitHub via `github:reynsu/floaty#main`.
+The lib's `dist/` is gitignored, but a `prepare` script in its `package.json`
+rebuilds it automatically on every `npm install` — including the one Vercel
+runs during deploy. Once the package is published to npm, switch to:
 
 ```diff
-- "react-floaty": "file:../floater-actions",
+- "react-floaty": "github:reynsu/floaty#main",
 + "react-floaty": "^0.1.0",
 ```
 
