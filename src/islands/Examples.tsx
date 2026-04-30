@@ -637,7 +637,7 @@ export default function Examples() {
             />
           </FloaterActionsProvider>
 
-          <FloaterActionsProvider maxVisible={3} className="theme-pill">
+          <FloaterActionsProvider maxVisible={3}>
             <ExampleCard
               no="03 / Command palette"
               name="Keyboard-driven toggle()"
