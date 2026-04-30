@@ -63,19 +63,23 @@ export default function HeroDemo() {
   return (
     <>
       <div className="hero-demo-tabs">
-        <div className="tabs">
+        <div className="tabs" role="tablist" aria-label="Hero demo view">
           <button
             type="button"
+            role="tab"
             className="tab"
             aria-selected={tab === 'demo'}
+            tabIndex={tab === 'demo' ? 0 : -1}
             onClick={() => setTab('demo')}
           >
             Live <span className="num">↑</span>
           </button>
           <button
             type="button"
+            role="tab"
             className="tab"
             aria-selected={tab === 'code'}
+            tabIndex={tab === 'code' ? 0 : -1}
             onClick={() => setTab('code')}
           >
             Source

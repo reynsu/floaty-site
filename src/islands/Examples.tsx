@@ -24,19 +24,23 @@ function ExampleCard({ no, name, desc, demo, code, hint }: ExampleCardProps) {
           <div className="example-name">{name}</div>
           <div className="example-desc">{desc}</div>
         </div>
-        <div className="tabs">
+        <div className="tabs" role="tablist" aria-label={`${name} view`}>
           <button
             type="button"
+            role="tab"
             className="tab"
             aria-selected={tab === 'demo'}
+            tabIndex={tab === 'demo' ? 0 : -1}
             onClick={() => setTab('demo')}
           >
             Demo
           </button>
           <button
             type="button"
+            role="tab"
             className="tab"
             aria-selected={tab === 'code'}
+            tabIndex={tab === 'code' ? 0 : -1}
             onClick={() => setTab('code')}
           >
             Code
@@ -151,6 +155,7 @@ function GalleryDemo() {
             }}
             onClick={() => toggle(p.id)}
             aria-pressed={sel.has(p.id)}
+            aria-label={`Photo ${p.id}`}
           />
         ))}
       </div>
