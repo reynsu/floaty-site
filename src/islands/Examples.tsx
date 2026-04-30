@@ -1,6 +1,21 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { FloaterActionsProvider, useFloaterActions, type FloaterAction } from 'react-floaty';
 import { Code } from '../components/Code';
+
+// ──────────────────────────────────────────────────────────
+// Global ⌘K / Ctrl+K listener for the palette demo (registered
+// once at module load — outside React — so the demo doesn't need
+// an effect just to attach a window listener).
+// ──────────────────────────────────────────────────────────
+let palettePress: (() => void) | null = null;
+if (typeof window !== 'undefined') {
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      palettePress?.();
+    }
+  });
+}
 
 // ──────────────────────────────────────────────────────────
 //  ExampleCard — wrapper with Demo/Code tabs
@@ -108,38 +123,38 @@ function GalleryDemo() {
     [],
   );
   const [sel, setSel] = useState<Set<string>>(new Set());
-  const { show, hide, open } = useFloaterActions();
+  const { show, hide } = useFloaterActions();
 
-  useEffect(() => {
-    if (sel.size === 0) {
-      if (open) hide();
+  const syncBar = (next: Set<string>) => {
+    if (next.size === 0) {
+      hide();
       return;
     }
-    const n = sel.size;
     show(
       [
-        { id: 'share', label: `Share (${n})`, onSelect: () => {} },
+        { id: 'share', label: `Share (${next.size})`, onSelect: () => {} },
         { id: 'album', label: 'Album', onSelect: () => {} },
         {
           id: 'delete',
           label: 'Delete',
           variant: 'danger',
-          onSelect: () => setSel(new Set()),
+          onSelect: () => {
+            setSel(new Set());
+            hide();
+          },
         },
         { id: 'tag', label: 'Tag', onSelect: () => {} },
         { id: 'info', label: 'Info', onSelect: () => {} },
       ],
       { dismissOnSelect: false },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel]);
+  };
 
   const toggle = (id: string) => {
-    setSel((p) => {
-      const n = new Set(p);
-      n.has(id) ? n.delete(id) : n.add(id);
-      return n;
-    });
+    const next = new Set(sel);
+    next.has(id) ? next.delete(id) : next.add(id);
+    setSel(next);
+    syncBar(next);
   };
 
   return (
@@ -165,26 +180,32 @@ function GalleryDemo() {
 
 const galleryCode = `function Gallery({ photos }: { photos: Photo[] }) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const { show, hide, open } = useFloaterActions();
+  const { show, hide } = useFloaterActions();
 
-  // Re-show whenever count changes — labels stay in sync.
-  useEffect(() => {
-    if (selected.size === 0) { if (open) hide(); return; }
-    const n = selected.size;
+  // Drive the bar straight from the click handler — no effect needed.
+  const syncBar = (next: Set<string>) => {
+    if (next.size === 0) return hide();
     show([
-      { id: 'share', label: \`Share (\${n})\`, onSelect: shareMany },
-      { id: 'album', label: 'Album',         onSelect: addToAlbum },
+      { id: 'share', label: \`Share (\${next.size})\`, onSelect: shareMany },
+      { id: 'album', label: 'Album',                 onSelect: addToAlbum },
       { id: 'delete', label: 'Delete', variant: 'danger',
-        onSelect: () => deleteMany(selected) },
+        onSelect: () => { deleteMany(next); setSelected(new Set()); hide(); } },
     ], { dismissOnSelect: false });   // bar stays open across actions
-  }, [selected]);
+  };
+
+  const toggle = (id: string) => {
+    const next = new Set(selected);
+    next.has(id) ? next.delete(id) : next.add(id);
+    setSelected(next);
+    syncBar(next);
+  };
 
   return (
     <div className="grid">
       {photos.map((p) => (
         <Tile key={p.id} photo={p}
           selected={selected.has(p.id)}
-          onClick={() => toggleSelection(p.id)} />
+          onClick={() => toggle(p.id)} />
       ))}
     </div>
   );
@@ -208,27 +229,20 @@ function PaletteDemo() {
     [],
   );
 
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        toggle(actions);
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [toggle, actions]);
+  // Wire the module-scope ⌘K listener to this instance's toggle. Render-time
+  // assignment is idempotent — the global listener stays a single subscription.
+  palettePress = () => toggle(actions);
 
-  // Modern userAgentData (Chromium 90+) with a fallback to userAgent for
-  // Safari/Firefox. navigator.platform is deprecated and avoided.
-  const [isMac, setIsMac] = useState(false);
-  useEffect(() => {
+  // Lazy initializer runs once on mount. Safe because Examples is a
+  // client-only island, so navigator is always defined here.
+  const [isMac] = useState(() => {
+    if (typeof navigator === 'undefined') return false;
     const uaData = (navigator as Navigator & {
       userAgentData?: { platform?: string };
     }).userAgentData;
     const platform = uaData?.platform ?? navigator.userAgent;
-    setIsMac(/Mac|iPhone|iPad|iOS/i.test(platform));
-  }, []);
+    return /Mac|iPhone|iPad|iOS/i.test(platform);
+  });
 
   return (
     <div className="demo-center">
@@ -250,9 +264,20 @@ function PaletteDemo() {
   );
 }
 
-const paletteCode = `function CommandPalette() {
-  const { toggle } = useFloaterActions();
+const paletteCode = `// Register the global hotkey once at module load — outside React. The
+// component just keeps a mutable hook to its current toggle.
+let press: (() => void) | null = null;
+if (typeof window !== 'undefined') {
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      press?.();
+    }
+  });
+}
 
+function CommandPalette() {
+  const { toggle } = useFloaterActions();
   const actions: FloaterAction[] = useMemo(() => [
     { id: 'new',  label: 'New file',     onSelect: newFile },
     { id: 'open', label: 'Open',         onSelect: openFile },
@@ -260,16 +285,8 @@ const paletteCode = `function CommandPalette() {
     { id: 'cmd',  label: 'Run command',  onSelect: runCmd },
   ], []);
 
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        toggle(actions);     // open if closed, close if open
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [toggle, actions]);
+  // Idempotent — picks up the latest toggle on every render.
+  press = () => toggle(actions);
 
   return null;   // pure behavior — the bar is mounted by the Provider
 }`;
@@ -277,7 +294,17 @@ const paletteCode = `function CommandPalette() {
 // ──────────────────────────────────────────────────────────
 //  04 — Bulk actions (inbox)
 // ──────────────────────────────────────────────────────────
-type Email = { id: string; from: string; subject: string; time: string; unread: boolean };
+type LabelTag = 'work' | 'personal' | 'later';
+const LABEL_CYCLE: (LabelTag | undefined)[] = [undefined, 'work', 'personal', 'later'];
+type Email = {
+  id: string;
+  from: string;
+  subject: string;
+  time: string;
+  unread: boolean;
+  snoozed?: boolean;
+  label?: LabelTag;
+};
 const initialEmails: Email[] = [
   { id: 'e1', from: 'GitHub', subject: 'Your PR was merged', time: '09:42', unread: true },
   { id: 'e2', from: 'Stripe', subject: 'Payout completed',   time: '08:15', unread: true },
@@ -288,23 +315,27 @@ const initialEmails: Email[] = [
 function InboxDemo() {
   const [emails, setEmails] = useState(initialEmails);
   const [sel, setSel] = useState<Set<string>>(new Set());
-  const { show, hide, open } = useFloaterActions();
+  const { show, hide } = useFloaterActions();
 
-  useEffect(() => {
-    if (sel.size === 0) {
-      if (open) hide();
+  const clearSelection = () => {
+    setSel(new Set());
+    hide();
+  };
+
+  const syncBar = (next: Set<string>, list: Email[]) => {
+    if (next.size === 0) {
+      hide();
       return;
     }
-    const n = sel.size;
-    const someUnread = emails.some((e) => sel.has(e.id) && e.unread);
+    const someUnread = list.some((e) => next.has(e.id) && e.unread);
     show(
       [
         {
           id: 'archive',
-          label: `Archive (${n})`,
+          label: `Archive (${next.size})`,
           onSelect: () => {
-            setEmails((prev) => prev.filter((e) => !sel.has(e.id)));
-            setSel(new Set());
+            setEmails((prev) => prev.filter((e) => !next.has(e.id)));
+            clearSelection();
           },
         },
         {
@@ -312,43 +343,91 @@ function InboxDemo() {
           label: someUnread ? 'Mark read' : 'Mark unread',
           onSelect: () => {
             setEmails((prev) =>
-              prev.map((e) => (sel.has(e.id) ? { ...e, unread: !someUnread } : e)),
+              prev.map((e) => (next.has(e.id) ? { ...e, unread: !someUnread } : e)),
             );
-            setSel(new Set());
+            clearSelection();
           },
         },
-        { id: 'delete', label: 'Delete', variant: 'danger', onSelect: () => {} },
-        { id: 'snooze', label: 'Snooze', onSelect: () => {} },
-        { id: 'label',  label: 'Label',  onSelect: () => {} },
+        {
+          id: 'delete',
+          label: 'Delete',
+          variant: 'danger',
+          onSelect: () => {
+            setEmails((prev) => prev.filter((e) => !next.has(e.id)));
+            clearSelection();
+          },
+        },
+        {
+          id: 'snooze',
+          label: 'Snooze',
+          onSelect: () => {
+            setEmails((prev) => {
+              const snoozed = prev
+                .filter((e) => next.has(e.id))
+                .map((e) => ({ ...e, snoozed: true, unread: false, time: 'Tomorrow' }));
+              const rest = prev.filter((e) => !next.has(e.id));
+              return [...rest, ...snoozed];
+            });
+            clearSelection();
+          },
+        },
+        {
+          id: 'label',
+          label: 'Label',
+          onSelect: () => {
+            setEmails((prev) =>
+              prev.map((e) => {
+                if (!next.has(e.id)) return e;
+                const i = LABEL_CYCLE.indexOf(e.label);
+                const cycled = LABEL_CYCLE[(i + 1) % LABEL_CYCLE.length];
+                return { ...e, label: cycled };
+              }),
+            );
+            clearSelection();
+          },
+        },
       ],
       { dismissOnSelect: false },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel, emails]);
+  };
 
   const toggleSel = (id: string) => {
-    setSel((p) => {
-      const n = new Set(p);
-      n.has(id) ? n.delete(id) : n.add(id);
-      return n;
-    });
+    const next = new Set(sel);
+    next.has(id) ? next.delete(id) : next.add(id);
+    setSel(next);
+    syncBar(next, emails);
+  };
+
+  const reset = () => {
+    setSel(new Set());
+    setEmails(initialEmails);
+    hide();
   };
 
   return (
     <div className="demo-center">
       <div className="demo-inbox">
         {emails.length === 0 ? (
-          <div className="demo-empty">inbox zero</div>
+          <div className="demo-empty">
+            inbox zero
+            <button type="button" className="demo-empty-reset" onClick={reset}>
+              reset
+            </button>
+          </div>
         ) : (
           emails.map((e) => (
             <div
               key={e.id}
-              className={`row ${e.unread ? 'unread' : 'read'} ${sel.has(e.id) ? 'checked' : ''}`}
+              className={`row ${e.unread ? 'unread' : 'read'} ${sel.has(e.id) ? 'checked' : ''} ${e.snoozed ? 'snoozed' : ''}`}
               onClick={() => toggleSel(e.id)}
             >
               <div className="check">{sel.has(e.id) ? '✓' : ''}</div>
               <div className="from">{e.from}</div>
-              <div className="subj">{e.subject}</div>
+              <div className="subj">
+                {e.label && <span className={`tag tag-${e.label}`}>{e.label}</span>}
+                {e.snoozed && <span className="tag tag-snoozed" aria-label="snoozed">💤</span>}
+                {e.subject}
+              </div>
               <div className="time">{e.time}</div>
             </div>
           ))
@@ -363,15 +442,16 @@ const inboxCode = `function Inbox({ emails }: { emails: Email[] }) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const { show, hide } = useFloaterActions();
 
-  useEffect(() => {
-    if (selected.size === 0) { hide(); return; }
+  const syncBar = (next: Set<string>) => {
+    if (next.size === 0) return hide();
     show([
       {
         id: 'archive',
-        label: \`Archive (\${selected.size})\`,
+        label: \`Archive (\${next.size})\`,
         onSelect: () => {
-          setItems((prev) => prev.filter((e) => !selected.has(e.id)));
+          setItems((prev) => prev.filter((e) => !next.has(e.id)));
           setSelected(new Set());
+          hide();
         },
       },
       { id: 'read',   label: 'Mark read', onSelect: markRead },
@@ -379,9 +459,16 @@ const inboxCode = `function Inbox({ emails }: { emails: Email[] }) {
       { id: 'snooze', label: 'Snooze', onSelect: snooze },
       { id: 'label',  label: 'Label',  onSelect: openLabelPicker },
     ], { dismissOnSelect: false });
-  }, [selected]);
+  };
 
-  return /* render rows */;
+  const toggleSelected = (id: string) => {
+    const next = new Set(selected);
+    next.has(id) ? next.delete(id) : next.add(id);
+    setSelected(next);
+    syncBar(next);
+  };
+
+  return /* rows call toggleSelected(row.id) */;
 }`;
 
 // ──────────────────────────────────────────────────────────
