@@ -20,7 +20,7 @@ export default defineConfig({
   devToolbar: { enabled: false },
   build: { inlineStylesheets: 'auto' },
   vite: {
-    // react-floaty is a file: dependency rebuilt via tsup; keep its prebundle stable.
-    optimizeDeps: { include: ['react-floaty'] },
+    // @reynsu/react-floaty is a github: dependency rebuilt via tsup; keep its prebundle stable.
+    optimizeDeps: { include: ['@reynsu/react-floaty'] },
   },
 });

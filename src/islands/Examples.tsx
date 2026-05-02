@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
-import { FloaterActionsProvider, useFloaterActions, type FloaterAction } from 'react-floaty';
+import { FloaterActionsProvider, useFloaterActions, type FloaterAction } from '@reynsu/react-floaty';
 import { Code } from '../components/Code';
 
 // ──────────────────────────────────────────────────────────
